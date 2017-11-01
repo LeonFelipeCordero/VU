@@ -1,0 +1,33 @@
+<script
+        async defer th:src="${apiKey}">
+</script>
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function(){
+
+        try {
+            var success = [[${status}]];
+            if(success !== null && success){
+                $.notify({
+                    icon: 'pe-icon-7-stroke',
+                    message: "Your Incident Has Been Saved Successfully!!! Thank You For Your Cooperation"
+
+                },{
+                    type: 'info',
+                    timer: 4000
+                });
+            }
+            else if (success !== null && !success){
+                $.notify({
+                    icon: 'pe-icon-7-stroke',
+                    message: "Sorry!!! your incident has not been inserted"
+
+                },{
+                    type: 'warning',
+                    timer: 4000
+                });
+            }
+        }catch(err) {
+            console.log("error showing message!!!!");
+        }
+    });
+</script>

@@ -1,0 +1,24 @@
+PUT /safe_city
+{
+  "mappings": {
+    "incident":{
+      "properties": {
+        "location":{
+          "type": "geo_point"
+        },
+        "title":{
+          "type": "text"
+        },
+        "description":{
+          "type": "text"
+        },
+        "incident":{
+          "type": "text"
+        },
+        "date":{
+          "type": "date"
+        }
+      }
+    }
+  }
+}

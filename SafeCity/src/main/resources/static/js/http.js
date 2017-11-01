@@ -1,0 +1,62 @@
+/**
+ * Created by leon on 18/05/2017.
+ *
+ */
+
+function ajax(url, data, type){
+    $.ajax({
+        url: url,
+        data: data,
+        type: type,
+        async: false,
+        timeout: 2000,
+        error: function () {
+            return '<h3>Sorry Something Went Wrong!!!!!</h3>';
+        },
+        success: function (template) {
+            return template;
+        }
+    });
+}
+
+function getPopUpFrom(marker) {
+    data = {
+        lat : marker.getPosition().lat(),
+        lng : marker.getPosition().lng()
+    };
+
+    var content;
+    $.ajax({
+        url: '/incident-form',
+        data: data,
+        type: 'GET',
+        async: false,
+        timeout: 2000,
+        error: function () {
+            content = '<h3>Sorry Something Went Wrong!!!!!</h3>';
+        },
+        success: function (template) {
+            content = template;
+        }
+    });
+
+    return content;
+}
+
+function getNearIncidents(point, callback){
+    $.ajax({
+        url: '/incident/near',
+        data: { lat: point.lat(), lng: point.lng() },
+        type: 'GET',
+        success: function (res) {
+            // var data = [];
+            // for (var i in res) {
+            //     data.push(res[i])
+            // }
+            callback(res);
+        },
+        error: function (res) {
+            callback('<h3>Sorry Something Went Wrong!!!!!</h3>');
+        }
+    });
+}
