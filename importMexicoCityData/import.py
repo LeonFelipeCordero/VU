@@ -4,6 +4,7 @@ import urllib.parse
 import requests
 from pprint import pprint
 from urllib.request import Request, urlopen
+from socket import *
 
 incidents_type_in_data = ['VIOLACION',
                           'ROBO A NEGOCIO C.V.',
@@ -47,6 +48,8 @@ def resolver_incident_type(incident_in_data):
     else:
         return incidents_type[5]
 
+s = socket(AF_INET, SOCK_STREAM)
+s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 
 with open('data.csv') as csv_file:
     reader = csv.reader(csv_file, delimiter=',')
@@ -63,15 +66,12 @@ with open('data.csv') as csv_file:
             }
             headers = {
                 'Authorization': 'Basic U2FmZUNpdHk6U2FmZUNpdHk=',
-                'Content-Type': 'application/json'}
+                'Content-Type': 'application/json',
+                'Connection': 'close'}
             response = requests.put('http://localhost:8081/save-incident',
                                     data=json.dumps(body),
                                     headers=headers)
-            pprint(response.text)
-            # request = Request('http://localhost:8081/save-incident', str(body).encode('utf-8'))
-            # request.add_header('Content-Type', 'application/json')
-            # request.add_header('Authorization', 'Basic U2FmZUNpdHk6U2FmZUNpdHk=')
-            # request.method = 'PUT'
-            # response = urlopen(request)
-            # pprint(response.status)
+            pprint(flag)
+
+            response.close()
         flag += 1
