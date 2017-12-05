@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @SpringBootApplication
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-public class SafeCityApplication extends WebSecurityConfigurerAdapter {
+public class    SafeCityApplication extends WebSecurityConfigurerAdapter {
 
     public static void main(String[] args) {
         SpringApplication.run(SafeCityApplication.class, args);

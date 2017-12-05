@@ -11,3 +11,9 @@ credentials list [
 ]
 
 TODO: Incidents market information view circle size view, Incidents queues and Incident processor,
+
+
+ANDROID DEPENDENCIES
+implementation 'com.google.android.gms:play-services-maps:11.6.0'
+implementation "com.google.android.gms:play-services-location:11.6.0"
+implementation 'com.google.android.gms:play-services-places:11.6.0'
