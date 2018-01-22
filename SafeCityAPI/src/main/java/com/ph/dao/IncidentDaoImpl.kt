@@ -5,11 +5,13 @@ import org.springframework.data.geo.Point
 import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 @Service("incidentDao")
-class IncidentDaoImpl(private val mongoOperations: MongoOperations): IncidentDao {
+open class IncidentDaoImpl(private val mongoOperations: MongoOperations): IncidentDao {
 
+    @Async
     override fun save(incident: Incident) {
         mongoOperations.save(incident)
     }

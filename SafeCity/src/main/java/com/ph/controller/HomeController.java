@@ -2,6 +2,8 @@ package com.ph.controller;
 
 import com.google.maps.errors.ApiException;
 import com.ph.rest.template.BasicAuthRestTemplate;
+import com.ph.service.ApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +17,9 @@ import java.io.IOException;
 @Controller()
 public class HomeController {
 
+    @Autowired
+    private ApiService apiService;
+
     @GetMapping(value = "/")
     public ModelAndView home(ModelAndView modelAndView,
                              @RequestParam(value = "success", required = false) boolean success)
@@ -22,7 +27,7 @@ public class HomeController {
         BasicAuthRestTemplate restTemplate = new BasicAuthRestTemplate("SafeCity", "SafeCity");
         modelAndView.addObject("apiKey",
                 "https://maps.googleapis.com/maps/api/js?key="
-                        + restTemplate.getForObject("http://localhost:8081/map-key", String.class)
+                        + apiService.getApiKey()
                         + "&callback=initMap&libraries=places");
         setFlag(modelAndView, success);
         modelAndView.addObject("description", "Vigiles Urbani | help to have a safe city | map");
