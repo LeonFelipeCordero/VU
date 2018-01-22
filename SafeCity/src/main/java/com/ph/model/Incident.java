@@ -2,12 +2,8 @@ package com.ph.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.cloud.firestore.GeoPoint;
 import com.ph.json.GeoJsonDeserialize;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,18 +20,16 @@ public class Incident implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
-    @Id
     private String _id;
-
     @JsonDeserialize(using = GeoJsonDeserialize.class)
-    private GeoJsonPoint location;
+    private GeoPoint location;
     private String title;
     private String description;
     private String incident;
     private Date date;
     private int level;
 
-    public Incident(String _id, GeoJsonPoint location, String title, String description, String incident, Date date, int level) {
+    public Incident(String _id, GeoPoint location, String title, String description, String incident, Date date, int level) {
         this._id = _id;
         this.location = location;
         this.title = title;
@@ -45,7 +39,7 @@ public class Incident implements Serializable{
         this.level = level;
     }
 
-    public Incident(GeoJsonPoint location, String title, String description, String incident, int level, Date date) {
+    public Incident(GeoPoint location, String title, String description, String incident, int level, Date date) {
         this.location = location;
         this.title = title;
         this.description = description;
@@ -60,7 +54,6 @@ public class Incident implements Serializable{
     @Override
     public String toString() {
         return "Incident{" +
-                "_id=" + _id.toString() +
                 ", location=" + location.toString() +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
@@ -74,11 +67,15 @@ public class Incident implements Serializable{
         return _id;
     }
 
-    public GeoJsonPoint getLocation() {
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public GeoPoint getLocation() {
         return location;
     }
 
-    public void setLocation(GeoJsonPoint location) {
+    public void setLocation(GeoPoint location) {
         this.location = location;
     }
 

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class MapController(private val mapsService: GoogleMapsService) {
+class   MapController(private val mapsService: GoogleMapsService) {
 
     @GetMapping(value = ["/map-key"])
     fun getKey(): String? = mapsService.findGoogleMapsApiKey().value

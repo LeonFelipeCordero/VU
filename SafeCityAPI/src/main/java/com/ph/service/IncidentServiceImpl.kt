@@ -1,9 +1,9 @@
 package com.ph.service
 
+import com.google.cloud.firestore.GeoPoint
 import com.ph.dao.IncidentDao
 import com.ph.form.IncidentForm
 import com.ph.model.Incident
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.stereotype.Service
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -14,7 +14,9 @@ class IncidentServiceImpl(private val incidentDao: IncidentDao) : IncidentServic
 
     override fun convertFormToIncident(incidentForm: IncidentForm): Incident
             = Incident(
-            GeoJsonPoint(java.lang.Double.parseDouble(incidentForm.lng), java.lang.Double.parseDouble(incidentForm.lat)),
+
+//            GeoJsonPoint(java.lang.Double.parseDouble(incidentForm.lng), java.lang.Double.parseDouble(incidentForm.lat)),
+            GeoPoint(java.lang.Double.parseDouble(incidentForm.lat), java.lang.Double.parseDouble(incidentForm.lng)),
             incidentForm.title,
             incidentForm.description,
             incidentForm.incident,

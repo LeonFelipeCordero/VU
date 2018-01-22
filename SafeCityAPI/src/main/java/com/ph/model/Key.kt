@@ -1,15 +1,15 @@
 package com.ph.model
 
-import org.bson.types.ObjectId
-import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.Document
-import java.io.Serializable
+//import org.bson.types.ObjectId
+//import org.springframework.data.annotation.Id
+//import org.springframework.data.mongodb.core.mapping.Document
+//import java.io.Serializable
 
-@Document(collection = "keys")
-class Key : Serializable {
+//@Document(collection = "keys")
+class Key {
 
-    @Id
-    var _id: ObjectId? = null
+//    @Id
+//    var _id: ObjectId? = null
 
     var name: String? = null
     var value: String? = null
@@ -27,7 +27,7 @@ class Key : Serializable {
 
     override fun toString(): String =
                 "Key{" +
-                "_id=" + _id +
+//                "_id=" + _id +
                 ", name='" + name + '\'' +
                 ", value='" + value + '\'' +
                 ", provider='" + provider + '\'' +

@@ -162,7 +162,8 @@ function onChangeListener(map) {
                 // markers = {};
                 for (var index in data) {
                     var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(data[index].location.coordinates[1], data[index].location.coordinates[0]),
+                        // position: new google.maps.LatLng(data[index].location.coordinates[1], data[index].location.coordinates[0]),
+                        position: new google.maps.LatLng(data[index].location.latitude, data[index].location.longitude),
                         title: data[index].title,
                         icon: '/img/gun.png'
                     });

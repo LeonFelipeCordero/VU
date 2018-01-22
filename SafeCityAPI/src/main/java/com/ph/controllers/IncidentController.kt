@@ -23,7 +23,7 @@ class IncidentController(private val incidentService: IncidentService) {
             incidentService.save(incidentService.convertFormToIncident(incidentForm))
             ResponseEntity.accepted()
         } catch (e: Exception) {
-            ResponseEntity.unprocessableEntity()
+                ResponseEntity.unprocessableEntity()
         }
     }
 }

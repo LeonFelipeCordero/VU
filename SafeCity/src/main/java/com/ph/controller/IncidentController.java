@@ -3,12 +3,15 @@ package com.ph.controller;
 import com.ph.form.IncidentForm;
 import com.ph.model.Incident;
 import com.ph.rest.template.BasicAuthRestTemplate;
+import com.ph.service.ApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import javax.xml.ws.Action;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,13 +21,13 @@ import java.util.List;
 @RestController
 public class IncidentController {
 
+    @Autowired
+    private ApiService apiService;
+
     @GetMapping(value = "/incident/near", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Incident> nearIncidents(@RequestParam(value = "lat") double lat,
                                         @RequestParam(value = "lng") double lng) {
-        BasicAuthRestTemplate restTemplate = new BasicAuthRestTemplate("SafeCity", "SafeCity");
-        ResponseEntity<Incident[]> incidents =
-//                restTemplate.getForEntity("http://localhost:8081/incident/near?lat=28.646193125941&lng=-106.09076499939", Incident[].class);
-                restTemplate.getForEntity("http://localhost:8081/incident/near?lat="+ lat +"&lng=" + lng, Incident[].class);
+        ResponseEntity<Incident[]> incidents = apiService.getNearIncidents(lat, lng);
         return Arrays.asList(incidents.getBody());
     }
 
@@ -41,8 +44,7 @@ public class IncidentController {
     public ModelAndView saveIncident(@Valid @ModelAttribute("incidentForm") IncidentForm incidentForm,
                                      ModelAndView modelAndView) {
         try {
-            BasicAuthRestTemplate restTemplate = new BasicAuthRestTemplate("SafeCity", "SafeCity");
-            restTemplate.put("http://localhost:8081/save-incident", incidentForm);
+            apiService.saveIncident(incidentForm);
             modelAndView.setViewName("redirect:/?success=true");
         } catch (Exception e) {
             modelAndView.setViewName("redirect:/?success=false");
