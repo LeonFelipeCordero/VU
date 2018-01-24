@@ -1,7 +1,7 @@
 service: default
 
 runtime: java
-env: star
+env: standar
 
 runtime_config:
   jdk: openjdk8
