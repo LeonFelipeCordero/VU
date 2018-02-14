@@ -2,7 +2,10 @@ package com.ph.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.google.cloud.firestore.GeoPoint;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.mapping.Document;
 import com.ph.json.GeoJsonDeserialize;
 
 import java.io.Serializable;
@@ -22,14 +25,14 @@ public class Incident implements Serializable{
 
     private String _id;
     @JsonDeserialize(using = GeoJsonDeserialize.class)
-    private GeoPoint location;
+    private GeoJsonPoint location;
     private String title;
     private String description;
     private String incident;
     private Date date;
     private int level;
 
-    public Incident(String _id, GeoPoint location, String title, String description, String incident, Date date, int level) {
+    public Incident(String _id, GeoJsonPoint location, String title, String description, String incident, Date date, int level) {
         this._id = _id;
         this.location = location;
         this.title = title;
@@ -39,7 +42,7 @@ public class Incident implements Serializable{
         this.level = level;
     }
 
-    public Incident(GeoPoint location, String title, String description, String incident, int level, Date date) {
+    public Incident(GeoJsonPoint location, String title, String description, String incident, int level, Date date) {
         this.location = location;
         this.title = title;
         this.description = description;
@@ -71,11 +74,11 @@ public class Incident implements Serializable{
         this._id = _id;
     }
 
-    public GeoPoint getLocation() {
+    public GeoJsonPoint getLocation() {
         return location;
     }
 
-    public void setLocation(GeoPoint location) {
+    public void setLocation(GeoJsonPoint location) {
         this.location = location;
     }
 

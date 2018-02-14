@@ -97,77 +97,17 @@
             <artifactId>gson</artifactId>
             <version>2.8.0</version>
         </dependency>
-		<dependency>
-			<groupId>com.google.firebase</groupId>
-			<artifactId>firebase-admin</artifactId>
-			<version>5.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.firebase</groupId>
-			<artifactId>geofire-java</artifactId>
-			<version>2.2.0</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
     </dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.samaxes.maven</groupId>
-				<artifactId>minify-maven-plugin</artifactId>
-				<version>1.7.5</version>
-				<executions>
-					<execution>
-						<id>default-minify</id>
-						<phase>package</phase>
-						<configuration>
-							<webappSourceDir>${basedir}/src/main/resources/static</webappSourceDir>
-							<webappTargetDir>${basedir}/src/main/resources/static</webappTargetDir>
-							<charset>UTF-8</charset>
-							<cssSourceDir>css</cssSourceDir>
-							<cssTargetDir>css</cssTargetDir>
-							<cssSourceFiles>
-								<cssSourceFile>bootstrap.min.css</cssSourceFile>
-								<cssSourceFile>animate.min.css</cssSourceFile>
-								<cssSourceFile>bootstrap-theme.min.css</cssSourceFile>
-								<cssSourceFile>demo.css</cssSourceFile>
-								<cssSourceFile>light-bootstrap-dashboard.css</cssSourceFile>
-								<cssSourceFile>pe-icon-7-stroke.css</cssSourceFile>
-								<cssSourceFile>styles.css</cssSourceFile>
-							</cssSourceFiles>
-							<cssFinalFile>bundle.css</cssFinalFile>
-							<jsSourceDir>js</jsSourceDir>
-							<jsTargetDir>js</jsTargetDir>
-							<jsSourceFiles>
-								<jsSourceFile>jquery-3.2.1.min.js</jsSourceFile>
-								<jsSourceFile>bootstrap.min.js</jsSourceFile>
-								<jsSourceFile>http.js</jsSourceFile>
-								<jsSourceFile>map.js</jsSourceFile>
-								<jsSourceFile>bootstrap-checkbox-radio-switch.js</jsSourceFile>
-								<jsSourceFile>bootstrap-notify.js</jsSourceFile>
-								<jsSourceFile>bootstrap-select.js</jsSourceFile>
-								<jsSourceFile>chartist.min.js</jsSourceFile>
-								<jsSourceFile>demo.js</jsSourceFile>
-								<jsSourceFile>light-bootstrap-dashboard.js</jsSourceFile>
-								<jsSourceFile>onReady.js</jsSourceFile>
-								<jsSourceFile>npm.js</jsSourceFile>
-							</jsSourceFiles>
-							<jsFinalFile>bundle.js</jsFinalFile>
-							<jsEngine>CLOSURE</jsEngine>
-						</configuration>
-						<goals>
-							<goal>minify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.google.appengine</groupId>
-				<artifactId>appengine-maven-plugin</artifactId>
-				<version>1.9.9</version>
 			</plugin>
 		</plugins>
 	</build>

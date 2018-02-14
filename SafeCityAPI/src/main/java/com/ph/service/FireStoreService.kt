@@ -1,5 +1,5 @@
-package com.ph.service
-
-interface FireStoreService {
-    fun generateDocument(): String?
-}
+//package com.ph.service
+//
+//interface FireStoreService {
+//    fun generateDocument(): String?
+//}
