@@ -90,13 +90,12 @@ function onChangeListener(map) {
                 // markers = {};
                 for (var index in data) {
                     var marker = new google.maps.Marker({
-                        // position: new google.maps.LatLng(data[index].location.coordinates[1], data[index].location.coordinates[0]),
-                        position: new google.maps.LatLng(data[index].location.latitude, data[index].location.longitude),
+                        position: new google.maps.LatLng(data[index].location.coordinates[1], data[index].location.coordinates[0]),
                         title: data[index].title,
                         icon: '/img/gun.png'
                     });
                     markersId.push(data[index]._id);
-                    if(!(data[index]._id in markers)){
+                    if (!(data[index]._id in markers)) {
                         markers[data[index]._id] = marker;
                         setContentToMarker(marker, data[index], map);
                     }
@@ -148,10 +147,10 @@ function removeMarkers(markersIdInCookies) {
     });
 }
 
-function setMarkers(markersIdInCookies, map){
+function setMarkers(markersIdInCookies, map) {
     markersId.forEach(function (marker) {
         // if(!markersIdInCookies.includes(marker)){
-            markers[marker].setMap(map);
+        markers[marker].setMap(map);
         // }
     });
 }
