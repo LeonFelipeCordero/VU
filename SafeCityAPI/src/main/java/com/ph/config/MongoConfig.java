@@ -16,8 +16,7 @@ public class MongoConfig {
 
     @Bean
     public MongoDbFactory mongoDbFactory() {
-        return new SimpleMongoDbFactory(new MongoClient(System.getProperty("mongo.host", "localhost"),
-                Integer.parseInt(System.getProperty("mongo.port", "27017"))), "safe_city");
+        return new SimpleMongoDbFactory(new MongoClient("mongodb"), "safe_city");
     }
 
     @Bean

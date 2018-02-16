@@ -14,19 +14,22 @@ public class ApiServiceImpl implements ApiService {
     @Async
     public void saveIncident(IncidentForm incidentForm) {
         BasicAuthRestTemplate restTemplate = new BasicAuthRestTemplate("SafeCity", "SafeCity");
-        restTemplate.put("http://localhost:8081/save-incident", incidentForm);
+//        restTemplate.put("http://localhost:8081/save-incident", incidentForm);
+        restTemplate.put("http://api:8081/save-incident", incidentForm);
     }
 
     @Override
     public ResponseEntity<Incident[]> getNearIncidents(double lat, double lng) {
         BasicAuthRestTemplate restTemplate = new BasicAuthRestTemplate("SafeCity", "SafeCity");
-        return restTemplate.getForEntity("http://localhost:8081/incident/near?lat=" + lat + "&lng=" + lng, Incident[].class);
+//        return restTemplate.getForEntity("http://localhost:8081/incident/near?lat=" + lat + "&lng=" + lng, Incident[].class);
+        return restTemplate.getForEntity("http://api:8081/incident/near?lat=" + lat + "&lng=" + lng, Incident[].class);
     }
 
     @Override
     public String getApiKey() {
         BasicAuthRestTemplate restTemplate = new BasicAuthRestTemplate("SafeCity", "SafeCity");
-        return restTemplate.getForObject("http://localhost:8081/map-key", String.class);
+//        return restTemplate.getForObject("http://localhost:8081/map-key", String.class);
+        return restTemplate.getForObject("http://api:8081/map-key", String.class);
     }
 
 }

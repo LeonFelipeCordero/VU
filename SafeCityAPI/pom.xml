@@ -5,8 +5,8 @@
 
 	<groupId>com.ph</groupId>
 	<artifactId>safe-city-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<version>1.0</version>
+	<packaging>jar</packaging>
 
 	<name>safe-city-api</name>
 	<description>Safe CIty App API</description>
