@@ -3,9 +3,12 @@ package com.ph.controllers
 import com.ph.form.IncidentForm
 import com.ph.model.Incident
 import com.ph.service.IncidentService
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+
 
 @RestController
 class IncidentController(private val incidentService: IncidentService) {
@@ -17,13 +20,16 @@ class IncidentController(private val incidentService: IncidentService) {
             List<Incident> = incidentService.findNearIncidents(lat, lng)
 
 
-    @PutMapping(value = ["/save-incident"])
-    fun saveIncident(@RequestBody incidentForm: IncidentForm): ResponseEntity.BodyBuilder? {
+    @PostMapping(value = ["/save-incident"])
+    fun saveIncident(@RequestBody incidentForm: IncidentForm): ResponseEntity<String> {
         return try {
             incidentService.save(incidentService.convertFormToIncident(incidentForm))
-            ResponseEntity.accepted()
+            val responseHeaders = HttpHeaders()
+            ResponseEntity<String>("incident processed", responseHeaders, HttpStatus.ACCEPTED)
         } catch (e: Exception) {
-                ResponseEntity.unprocessableEntity()
+            val responseHeaders = HttpHeaders()
+            ResponseEntity<String>("incident not processed", responseHeaders, HttpStatus.UNPROCESSABLE_ENTITY)
         }
     }
+
 }

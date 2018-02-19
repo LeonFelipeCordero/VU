@@ -42,6 +42,7 @@ class IncidentServiceImpl(private val incidentDao: IncidentDao) : IncidentServic
                 "Drugs" -> 8
                 "Police Arrest" -> 5
                 "kidnapping" -> 5
+                "Rape" -> 8
                 else -> 3
             }
 

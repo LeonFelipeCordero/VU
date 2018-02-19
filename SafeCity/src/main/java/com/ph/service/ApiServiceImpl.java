@@ -15,7 +15,7 @@ public class ApiServiceImpl implements ApiService {
     public void saveIncident(IncidentForm incidentForm) {
         BasicAuthRestTemplate restTemplate = new BasicAuthRestTemplate("SafeCity", "SafeCity");
 //        restTemplate.put("http://localhost:8081/save-incident", incidentForm);
-        restTemplate.put("http://api:8081/save-incident", incidentForm);
+        restTemplate.postForObject("http://api:8081/save-incident", incidentForm, Incident.class);
     }
 
     @Override

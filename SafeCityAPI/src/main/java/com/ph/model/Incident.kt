@@ -13,33 +13,21 @@ import java.util.*
  */
 @Document(collection = "incident")
 @CompoundIndexes(CompoundIndex(name = "geolocation", def = "{'location': '2dsphere'}"))
-class Incident : Serializable {
+data class Incident constructor(
+        val location: GeoJsonPoint,
+        val title: String,
+        val description: String,
+        val incident: String,
+        val level: Int,
+        val date: Date) : Serializable {
 
     @Id
     var _id: String? = null
 
-    var location: GeoJsonPoint? = null
-    var title: String? = null
-    var description: String? = null
-    var incident: String? = null
-    var date: Date? = null
-    var level: Int = 0
-
-    constructor(location: GeoJsonPoint, title: String, description: String, incident: String, level: Int, date: Date) {
-        this.location = location
-        this.title = title
-        this.description = description
-        this.incident = incident
-        this.level = level
-        this.date = date
-    }
-
-    constructor() {}
-
     override fun toString(): String {
         return "Incident{" +
-                "_id=" + _id!!.toString() +
-                ", location=" + location!!.toString() +
+                "_id=" + _id +
+                ", location=" + location.toString() +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", incidentService='" + incident + '\'' +

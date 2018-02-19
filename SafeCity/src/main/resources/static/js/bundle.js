@@ -86,7 +86,7 @@ function placeMarker(map, location, currentMarker) {
         position: location,
         map: map,
         animation: google.maps.Animation.DROP,
-        icon: '/img/gun.png'
+        icon: '/img/burglar.png'
     });
 }
 
@@ -162,13 +162,12 @@ function onChangeListener(map) {
                 // markers = {};
                 for (var index in data) {
                     var marker = new google.maps.Marker({
-                        // position: new google.maps.LatLng(data[index].location.coordinates[1], data[index].location.coordinates[0]),
-                        position: new google.maps.LatLng(data[index].location.latitude, data[index].location.longitude),
+                        position: new google.maps.LatLng(data[index].location.coordinates[1], data[index].location.coordinates[0]),
                         title: data[index].title,
-                        icon: '/img/gun.png'
+                        icon: '/img/burglar.png'
                     });
                     markersId.push(data[index]._id);
-                    if(!(data[index]._id in markers)){
+                    if (!(data[index]._id in markers)) {
                         markers[data[index]._id] = marker;
                         setContentToMarker(marker, data[index], map);
                     }
@@ -183,7 +182,7 @@ function onChangeListener(map) {
 }
 
 function distanceReady(originalPoint, newPoint) {
-    return Math.abs(originalPoint[0] - newPoint.lat()) > .001 || Math.abs(originalPoint[1] - newPoint.lng()) > .001;
+    return Math.abs(originalPoint[0] - newPoint.lat()) > .1 || Math.abs(originalPoint[1] - newPoint.lng()) > .1;
 }
 
 function setContentToMarker(marker, data, map) {
@@ -220,10 +219,10 @@ function removeMarkers(markersIdInCookies) {
     });
 }
 
-function setMarkers(markersIdInCookies, map){
+function setMarkers(markersIdInCookies, map) {
     markersId.forEach(function (marker) {
         // if(!markersIdInCookies.includes(marker)){
-            markers[marker].setMap(map);
+        markers[marker].setMap(map);
         // }
     });
 }
