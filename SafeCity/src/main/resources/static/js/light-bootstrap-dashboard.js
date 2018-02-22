@@ -93,10 +93,10 @@ lbd = {
             ul_content = ul_content + content_buff;
             
             //add the content from the regular header to the right menu
-            $navbar.children('ul').each(function(){
-                content_buff = $(this).html();
-                ul_content = ul_content + content_buff;   
-            });
+            // $navbar.children('ul').each(function(){
+            //     content_buff = $(this).html();
+            //     ul_content = ul_content + content_buff;
+            // });
              
             ul_content = '<ul class="nav navbar-nav">' + ul_content + '</ul>';
             

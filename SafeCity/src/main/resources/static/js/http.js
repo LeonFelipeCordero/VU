@@ -49,10 +49,6 @@ function getNearIncidents(point, callback){
         data: { lat: point.lat(), lng: point.lng() },
         type: 'GET',
         success: function (res) {
-            // var data = [];
-            // for (var i in res) {
-            //     data.push(res[i])
-            // }
             callback(res);
         },
         error: function (res) {

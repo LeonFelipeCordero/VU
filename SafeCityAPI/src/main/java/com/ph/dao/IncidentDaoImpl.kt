@@ -23,7 +23,7 @@ class IncidentDaoImpl(private val mongoOperations: MongoOperations) : IncidentDa
                 Query(Criteria
                         .where("location")
                         .nearSphere(Point(lng, lat))
-                        .maxDistance(0.10)
+                        .maxDistance(0.01)
                         .and("date")
                         .lte(Date())
                         .gte(calendar.time)),
