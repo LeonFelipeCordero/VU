@@ -1,6 +1,5 @@
 package com.ph.model
 
-import jdk.nashorn.internal.ir.annotations.Ignore
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
@@ -14,8 +13,8 @@ data class Key constructor(
     @Id
     var _id: ObjectId? = null
 
-    @Ignore var provider: String? = null
-    @Ignore val description: String? = null
+    var provider: String? = null
+    val description: String? = null
 
     override fun toString(): String =
             "Key{" +
@@ -25,7 +24,6 @@ data class Key constructor(
                     ", provider='" + provider + '\'' +
                     ", description='" + description + '\'' +
                     '}'
-
 
 
     companion object {

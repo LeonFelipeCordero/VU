@@ -59,10 +59,6 @@ function getNearIncidents(point, callback){
         data: { lat: point.lat(), lng: point.lng() },
         type: 'GET',
         success: function (res) {
-            // var data = [];
-            // for (var i in res) {
-            //     data.push(res[i])
-            // }
             callback(res);
         },
         error: function (res) {
@@ -73,8 +69,7 @@ function getNearIncidents(point, callback){
 /**
  * Created leon on 26/04/2017.
  */
-var markersId = [];
-var markers = {};
+var generalMarkers = [];
 
 function setNewCenter(newCenter) {
     document.cookie = 'center=' + [newCenter.lat(), newCenter.lng()];
@@ -90,7 +85,6 @@ function placeMarker(map, location, currentMarker) {
     });
 }
 
-// Deletes all markers in the array by removing references to them
 function deleteCurrentMaker(currentMarker) {
     if (currentMarker !== undefined) {
         currentMarker.setMap(null);
@@ -108,31 +102,23 @@ function setListener(map) {
 }
 
 function setAddressFinder(map) {
-    // Create the search box and link it to the UI element.
     var input = document.getElementById('searchBox');
     var searchBox = new google.maps.places.SearchBox(input);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-    // Bias the SearchBox results towards current map's viewport.
     map.addListener('bounds_changed', function () {
         searchBox.setBounds(map.getBounds());
     });
 
-    var markers = [];
-    // Listen for the event fired when the user selects a prediction and retrieve
-    // more details for that place.
     searchBox.addListener('places_changed', function () {
         var places = searchBox.getPlaces();
 
         if (places.length === 0) {
             return;
         }
-        // Clear out the old markers.
-        markers.forEach(function (marker) {
-            marker.setMap(null);
-        });
-        markers = [];
-        // For each place, get the icon, name and location.
+
+        removeMarkers();
+
         var bounds = new google.maps.LatLngBounds();
         places.forEach(function (place) {
             if (!place.geometry) {
@@ -140,8 +126,14 @@ function setAddressFinder(map) {
                 return;
             }
             if (place.geometry.viewport) {
-                // Only geocodes have viewport.
                 bounds.union(place.geometry.viewport);
+                map.setCenter(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()));
+                if(document.URL.includes('/hot-zones')){
+                    setHotZoneFunctions(map);
+                }else{
+                    setCrimesPoints(map);
+                }
+
             } else {
                 bounds.extend(place.geometry.location);
             }
@@ -150,39 +142,45 @@ function setAddressFinder(map) {
     });
 }
 
-function onChangeListener(map) {
-    document.cookie = 'center=;';
-    document.cookie = 'markers=;';
-    google.maps.event.addListener(map, 'center_changed', function () {
-        var newCenter = map.getCenter();
-        if (getCookie("center")[0] === "" || distanceReady(getCookie("center"), newCenter)) {
-            setNewCenter(newCenter);
-            getNearIncidents(map.getCenter(), function (data) {
-                markersId = [];
-                // markers = {};
-                for (var index in data) {
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(data[index].location.coordinates[1], data[index].location.coordinates[0]),
-                        title: data[index].title,
-                        icon: '/img/burglar.png'
-                    });
-                    markersId.push(data[index]._id);
-                    if (!(data[index]._id in markers)) {
-                        markers[data[index]._id] = marker;
-                        setContentToMarker(marker, data[index], map);
-                    }
-                }
-                var markersIdInCookies = getCookie("markers");
-                document.cookie = 'markers=' + markersId;
-                removeMarkers(markersIdInCookies);
-                setMarkers(markersIdInCookies, map);
-            });
-        }
+function setCrimesPoints(map) {
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        getNearIncidents(map.getCenter(), function (data) {
+            for (var index in data) {
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(data[index].location.coordinates[1], data[index].location.coordinates[0]),
+                    title: data[index].title,
+                    icon: '/img/burglar.png'
+                });
+                generalMarkers.push(marker);
+                setContentToMarker(marker, data[index], map);
+            }
+            setMarkers(map);
+        });
     });
 }
 
-function distanceReady(originalPoint, newPoint) {
-    return Math.abs(originalPoint[0] - newPoint.lat()) > .1 || Math.abs(originalPoint[1] - newPoint.lng()) > .1;
+function setHotZoneFunctions(map) {
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        var heatmapData = [];
+        getNearIncidents(map.getCenter(), function (data) {
+            markersId = [];
+            for (var index in data) {
+                heatmapData.push(
+                    new google.maps.LatLng(
+                        data[index].location.coordinates[1],
+                        data[index].location.coordinates[0]
+                    )
+                );
+            }
+            var heatmap = new google.maps.visualization.HeatmapLayer({
+                data: heatmapData,
+                dissipating: false,
+                map: map,
+                maxIntensity: 1,
+                radius: .001
+            });
+        });
+    });
 }
 
 function setContentToMarker(marker, data, map) {
@@ -192,38 +190,16 @@ function setContentToMarker(marker, data, map) {
     });
 }
 
-function getCookie(cookieName) {
-    var name = cookieName + '=';
-    var cookies = document.cookie.split(';');
-    for (var index in cookies) {
-        var cookie = cookies[index];
-        while (cookie.charAt(0) === ' ') {
-            cookie = cookie.substring(1);
-        }
-        if (cookie.indexOf(name) === 0) {
-            return cookie.substring(name.length, cookie.length).split(',');
-        }
-    }
-    return '';
-}
-
-
-function removeMarkers(markersIdInCookies) {
-    markersIdInCookies.forEach(function (marker) {
-        if (!markersId.includes(marker)) {
-            if (marker in markers) {
-                markers[marker].setMap(null);
-                delete markers[marker];
-            }
-        }
+function removeMarkers() {
+    generalMarkers.forEach(function (marker) {
+        marker.setMap(null);
     });
+    generalMarkers = []
 }
 
-function setMarkers(markersIdInCookies, map) {
-    markersId.forEach(function (marker) {
-        // if(!markersIdInCookies.includes(marker)){
-        markers[marker].setMap(map);
-        // }
+function setMarkers(map) {
+    generalMarkers.forEach(function (marker) {
+        marker.setMap(map);
     });
 }
 
@@ -1867,10 +1843,10 @@ lbd = {
             ul_content = ul_content + content_buff;
             
             //add the content from the regular header to the right menu
-            $navbar.children('ul').each(function(){
-                content_buff = $(this).html();
-                ul_content = ul_content + content_buff;   
-            });
+            // $navbar.children('ul').each(function(){
+            //     content_buff = $(this).html();
+            //     ul_content = ul_content + content_buff;
+            // });
              
             ul_content = '<ul class="nav navbar-nav">' + ul_content + '</ul>';
             

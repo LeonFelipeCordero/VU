@@ -1,0 +1,18 @@
+db.incident.find({location: {$near: {$geometry: {type: "Point", coordinates: [-106.010761, 28.565033]},$maxDistance: 1000, $minDistance: 1}}})
+          
+db.incident.count(
+    {location: {$near: {$geometry: {type: "Point", coordinates: [-106.010761, 28.565033]},$maxDistance: 1000, $minDistance: 1}},incident:'Rape'}
+    )
+
+
+db.incident.aggregate([
+    {"$geoNear":{
+        "near": {"type": "Point", "coordinates": [-106.010761, 28.565033]},
+        "limit":1000,
+        "maxDistance":1000,
+        "distanceField": "dist.calculated"}},
+    {"$match": {"date":{"$gt":ISODate("2017-07-19 04:00:00.000")}}},
+    {"$group":{
+        _id:"$incident",
+        count:{"$sum":1},
+}}]);

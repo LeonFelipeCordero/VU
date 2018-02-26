@@ -4,6 +4,9 @@ SafeCity/target
 SafeCity/.idea
 SafeCity/.mvn
 SafeCityAPI/.mvn
+DashboardRenderingAPI/target
+DashboardRenderingAPI/.idea
+DashboardRenderingAPI/.mvn
 importMexicoCityData/.idea
 .idea/
 /data

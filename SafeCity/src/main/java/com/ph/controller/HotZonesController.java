@@ -21,6 +21,7 @@ public class HotZonesController {
         modelAndView.addObject("apiKey", googleMapService.getApiKeyForVisualizations());
         modelAndView.addObject("description", "Vigiles Urbani | help to have a safe city | Hot Zones");
         modelAndView.addObject("title", "Vigiles Urbani | mark any crime in your city to help having better and more safety cities ");
+        modelAndView.addObject("hotMap", true);
         modelAndView.setViewName("/index");
         return modelAndView;
     }

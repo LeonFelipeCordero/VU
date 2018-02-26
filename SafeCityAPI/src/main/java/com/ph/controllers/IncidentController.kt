@@ -1,5 +1,6 @@
 package com.ph.controllers
 
+import com.ph.dto.TimeIncidentCount
 import com.ph.form.IncidentForm
 import com.ph.model.Incident
 import com.ph.service.IncidentService
@@ -25,11 +26,15 @@ class IncidentController(private val incidentService: IncidentService) {
         return try {
             incidentService.save(incidentService.convertFormToIncident(incidentForm))
             val responseHeaders = HttpHeaders()
-            ResponseEntity<String>("incident processed", responseHeaders, HttpStatus.ACCEPTED)
+            ResponseEntity("incident processed", responseHeaders, HttpStatus.ACCEPTED)
         } catch (e: Exception) {
             val responseHeaders = HttpHeaders()
-            ResponseEntity<String>("incident not processed", responseHeaders, HttpStatus.UNPROCESSABLE_ENTITY)
+            ResponseEntity("incident not processed", responseHeaders, HttpStatus.UNPROCESSABLE_ENTITY)
         }
     }
 
+    @GetMapping(value = ["/statistics"], produces = [(MediaType.APPLICATION_JSON_VALUE)])
+    fun getDashboardData(@RequestParam(value = "lat") lat: Double,
+                         @RequestParam(value = "lng") lng: Double):
+            MutableList<TimeIncidentCount> = incidentService.getStatisticsByZone(lat, lng)
 }

@@ -20,10 +20,24 @@
         </script>
     </th:block>
 
-    <th:block th:unless="${normalMap}">
+    <th:block th:if="${hotMap}">
         <script th:inline="javascript">
             function initMap() {
                 initTerrainMapOnCurrentLocation();
+            }
+        </script>
+    </th:block>
+    
+    <th:block th:if="${dashboard}">
+        <script th:inline="javascript">
+            function initAutocomplete() {
+                var geocoder = new google.maps.Geocoder();
+                var autocomplete = new google.maps.places.Autocomplete(
+                    (document.getElementById('autocomplete')), {
+                        types: ['geocode']
+                    });
+
+                autocomplete.addListener('place_changed', fillInAddress);
             }
         </script>
     </th:block>

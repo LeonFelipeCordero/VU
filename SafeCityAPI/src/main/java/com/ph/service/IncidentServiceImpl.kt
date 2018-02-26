@@ -1,6 +1,7 @@
 package com.ph.service
 
 import com.ph.dao.IncidentDao
+import com.ph.dto.TimeIncidentCount
 import com.ph.form.IncidentForm
 import com.ph.model.Incident
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
@@ -29,6 +30,12 @@ class IncidentServiceImpl(private val incidentDao: IncidentDao) : IncidentServic
     override fun save(incident: Incident) {
         incidentDao.save(incident)
     }
+
+    override fun getStatisticsByZone(lat: Double, lng: Double): MutableList<TimeIncidentCount> {
+        return incidentDao.getStatistics(lat, lng)
+    }
+
+
 
     private fun getIncidentLevel(incident: String): Int =
             when (incident) {

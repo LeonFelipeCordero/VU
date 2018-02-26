@@ -1,9 +1,14 @@
 package com.ph.dao
 
+import com.ph.dto.IncidentCount
+import com.ph.dto.TimeIncidentCount
 import com.ph.model.Incident
+import org.springframework.data.geo.Distance
 import org.springframework.data.geo.Point
 import org.springframework.data.mongodb.core.MongoOperations
+import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.NearQuery
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 import java.util.*
@@ -29,4 +34,38 @@ class IncidentDaoImpl(private val mongoOperations: MongoOperations) : IncidentDa
                         .gte(calendar.time)),
                 Incident::class.java)
     }
+
+    override fun getStatistics(lat: Double, lng: Double): MutableList<TimeIncidentCount> {
+        val sixMonthsCalendar = Calendar.getInstance()
+        val oneYearCalendar = Calendar.getInstance()
+        val twoYearsCalendar = Calendar.getInstance()
+        sixMonthsCalendar.add(Calendar.MONTH, -6)
+        oneYearCalendar.add(Calendar.MONTH, -12)
+        twoYearsCalendar.add(Calendar.MONTH, -24)
+        return mutableListOf(
+                TimeIncidentCount("six months",
+                        mongoOperations.aggregate(
+                                getNearAggregationStatsByDate(lat, lng, sixMonthsCalendar),
+                                Incident::class.java,
+                                IncidentCount::class.java).mappedResults),
+                TimeIncidentCount("one year",
+                        mongoOperations.aggregate(
+                                getNearAggregationStatsByDate(lat, lng, oneYearCalendar),
+                                Incident::class.java,
+                                IncidentCount::class.java).mappedResults),
+                TimeIncidentCount("two years",
+                        mongoOperations.aggregate(
+                                getNearAggregationStatsByDate(lat, lng, twoYearsCalendar),
+                                Incident::class.java,
+                                IncidentCount::class.java).mappedResults))
+    }
+
+    private fun getNearAggregationStatsByDate(lat: Double, lng: Double, calendar: Calendar): Aggregation? {
+        return Aggregation.newAggregation(
+                Aggregation.geoNear(NearQuery.near(Point(lng, lat)).maxDistance(Distance(10.0)).spherical(true).inKilometers(), "distance"),
+                Aggregation.match(Criteria.where("date").lte(Date()).gte(calendar.time)),
+                Aggregation.group("incident").count().`as`("count"),
+                Aggregation.project("count").and("incident").previousOperation())
+    }
+
 }

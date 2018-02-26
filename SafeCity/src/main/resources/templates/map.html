@@ -50,3 +50,26 @@
         }
     }
 </script>
+
+<script>
+    var placeSearch, autocomplete, geocoder;
+
+    function codeAddress(address) {
+        geocoder.geocode({
+            'address': address
+        }, function(results, status) {
+            if (status === 'OK') {
+                // This is the lat and lng results[0].geometry.location
+                alert(results[0].geometry.location);
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+    function fillInAddress() {
+        var place = autocomplete.getPlace();
+
+        codeAddress(document.getElementById('autocomplete').value);
+    }
+</script>

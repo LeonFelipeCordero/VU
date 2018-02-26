@@ -4245,3 +4245,10 @@ body > .navbar-collapse[data-color="purple"]:after {
     background: #565656;
     height: .2%;
 }
+
+.dashboard {
+    width: 100%;
+    height: 100vmax;
+    padding: 5%;
+}
+

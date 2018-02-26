@@ -21,8 +21,12 @@ import java.util.List;
 @RestController
 public class IncidentController {
 
-    @Autowired
     private ApiService apiService;
+
+    @Autowired
+    public IncidentController(ApiService apiService) {
+        this.apiService = apiService;
+    }
 
     @GetMapping(value = "/incident/near", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Incident> nearIncidents(@RequestParam(value = "lat") double lat,
