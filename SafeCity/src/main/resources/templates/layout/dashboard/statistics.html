@@ -1,0 +1,58 @@
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    /*]]>*/
+</script>
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-header ">
+            <h4 class="card-title">Crimes Statistics</h4>
+            <p class="card-category">Last Crimes</p>
+        </div>
+        <div class="card-body ">
+            <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
+        </div>
+        <div class="card-footer ">
+            <hr>
+            <div class="stats">
+                <i class="fa fa-clock-o"></i> Crimes from 6 months ago
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+
+    function renderDonut() {
+        var lastCrimes = [[${lastCrimes}]];
+
+        var dataPreferences = {
+            series: []
+        };
+        var values = [];
+        var labels = [];
+
+        for (var index in lastCrimes) {
+            values.push(lastCrimes[index]['count']);
+            labels.push(lastCrimes[index]['incident']);
+        }
+
+        dataPreferences.series.push(values);
+
+        var optionsPreferences = {
+            donut: true,
+            donutWidth: 40,
+            startAngle: 0,
+            total: 100,
+            showLabel: false,
+            axisX: {
+                showGrid: false
+            }
+        };
+
+        Chartist.Pie('#chartPreferences', dataPreferences, optionsPreferences);
+
+        Chartist.Pie('#chartPreferences', {
+            labels: labels,
+            series: values
+        });
+    }
+</script>

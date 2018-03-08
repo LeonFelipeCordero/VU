@@ -1,5 +1,7 @@
 package com.ph.dao
 
+import com.ph.dto.Danger
+import com.ph.dto.DangerCount
 import com.ph.dto.IncidentCount
 import com.ph.dto.TimeIncidentCount
 import com.ph.model.Incident
@@ -15,7 +17,6 @@ import java.util.*
 
 @Service("incidentDao")
 class IncidentDaoImpl(private val mongoOperations: MongoOperations) : IncidentDao {
-
 
     override fun save(incident: Incident) {
         mongoOperations.save(incident)
@@ -60,12 +61,28 @@ class IncidentDaoImpl(private val mongoOperations: MongoOperations) : IncidentDa
                                 IncidentCount::class.java).mappedResults))
     }
 
+    override fun getDangerCount(lat: Double, lng: Double): Danger {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.MONTH, -6)
+        return mongoOperations.aggregate(
+                getDangerCountByDate(lat, lng, calendar),
+                Incident::class.java,
+                Danger::class.java).uniqueMappedResult
+    }
+
     private fun getNearAggregationStatsByDate(lat: Double, lng: Double, calendar: Calendar): Aggregation? {
         return Aggregation.newAggregation(
                 Aggregation.geoNear(NearQuery.near(Point(lng, lat)).maxDistance(Distance(10.0)).spherical(true).inKilometers(), "distance"),
                 Aggregation.match(Criteria.where("date").lte(Date()).gte(calendar.time)),
                 Aggregation.group("incident").count().`as`("count"),
                 Aggregation.project("count").and("incident").previousOperation())
+    }
+
+    private fun getDangerCountByDate(lat: Double, lng: Double, calendar: Calendar): Aggregation? {
+        return Aggregation.newAggregation(
+                Aggregation.geoNear(NearQuery.near(Point(lng, lat)).maxDistance(Distance(10.0)).spherical(true).inKilometers(), "distance"),
+                Aggregation.match(Criteria.where("date").lte(Date()).gte(calendar.time)),
+                Aggregation.group().sum("level").`as`("total"))
     }
 
 }

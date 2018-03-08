@@ -9,15 +9,23 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.List;
 
+@Service("basicAuthRestTemplate")
 public class BasicAuthRestTemplate extends RestTemplate {
 
     private String username;
     private String password;
 
-    public BasicAuthRestTemplate(String username, String password) {
+//    public BasicAuthRestTemplate(String username, String password) {
+//        super();
+//        this.username = username;
+//        this.password = password;
+//        addAuthentication();
+//    }
+
+    public BasicAuthRestTemplate() {
         super();
-        this.username = username;
-        this.password = password;
+        this.username = "SafeCity";
+        this.password = "SafeCity";
         addAuthentication();
     }
 

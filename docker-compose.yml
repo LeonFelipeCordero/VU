@@ -14,31 +14,32 @@ services:
 
   api:
     build: ./SafeCityAPI
-    working_dir: /SafeCityAPI
+    working_dir: /SafeCityAPI/target
     volumes:
-      - ./SafeCityAPI:/SafeCityAPI
+      - ./SafeCityAPI/target:/SafeCityAPI/target
       - ~/.m2:/home/leon/.m2
     ports: 
       - "8081:8081"
-      - "8001:8001"
-    command: mvn clean install
-    command: java -jar -Dspring.config.location=classpath:default.properties,classpath:production.properties target/safe-city-api-1.0.jar #mvn clean spring-boot:run -Dspring.config.location=classpath:default.
+      - "8001:8001"      
+    command: java -jar -Dspring.config.location=classpath:default.properties,classpath:production.properties /SafeCityAPI/target/safe-city-api-1.0.jar #mvn clean spring-boot:run -Dspring.config.location=classpath:default.     
     depends_on:
       - mongodb
     restart: always
   
   webapp:
     build: ./SafeCity
-    working_dir: /SafeCity
+    working_dir: /SafeCity/target
     volumes:
-      - ./SafeCity:/SafeCity
+      - ./SafeCity/target:/SafeCity/target
       - ~/.m2:/home/leon/.m2
-      - ./lib:/home/leon/workspace/projects/VU/lib
     ports: 
       - "8080:8080"
       - "8000:8000"
-    command: java -jar -Dspring.config.location=classpath:default.properties,classpath:production.properties target/safe-city-1.0.jar
+    command: java -jar -Dspring.config.location=classpath:default.properties,classpath:production.properties /SafeCity/target/safe-city-1.0.jar
     depends_on:
       - mongodb
       - api
     restart: always
+
+networks:
+  network1:

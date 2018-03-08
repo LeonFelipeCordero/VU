@@ -10,5 +10,3 @@ credentials list [
     {"name": "google.api", "value": "google api key"}
 ]
 
-
-

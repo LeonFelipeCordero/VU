@@ -56,3 +56,17 @@ function getNearIncidents(point, callback){
         }
     });
 }
+
+function getStatsByLocation(lat, lng, callback){
+    $.ajax({
+       url: '/statistics',
+       data: {lat: lat, lng: lng},
+       type: 'GET',
+        success: function (res) {
+            callback(res);
+        },
+        error: function (res) {
+            callback('<h3>Sorry Something Went Wrong!!!!!</h3>');
+        }
+    });
+}

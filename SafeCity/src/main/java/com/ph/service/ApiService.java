@@ -1,6 +1,7 @@
 package com.ph.service;
 
 import com.ph.form.IncidentForm;
+import com.ph.model.DangerCount;
 import com.ph.model.Incident;
 import com.ph.model.StatsOnTime;
 import org.springframework.http.ResponseEntity;
@@ -13,4 +14,6 @@ public interface ApiService {
     String getApiKey();
 
     ResponseEntity<StatsOnTime[]> getStatistics(double lat, double lng);
+
+    DangerCount getDangerCount(double lat, double lng);
 }

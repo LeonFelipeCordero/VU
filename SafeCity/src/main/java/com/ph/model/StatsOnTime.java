@@ -1,11 +1,20 @@
 package com.ph.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class StatsOnTime {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class StatsOnTime implements Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     private String timeAgo;
     private List<Statistics> statistics;
+
+    public StatsOnTime() {
+    }
 
     public StatsOnTime(String timeAgo, List<Statistics> statistics) {
         this.timeAgo = timeAgo;

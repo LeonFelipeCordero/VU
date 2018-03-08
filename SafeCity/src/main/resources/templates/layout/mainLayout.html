@@ -27,7 +27,7 @@
             }
         </script>
     </th:block>
-    
+
     <th:block th:if="${dashboard}">
         <script th:inline="javascript">
             function initAutocomplete() {
@@ -37,7 +37,7 @@
                         types: ['geocode']
                     });
 
-                autocomplete.addListener('place_changed', fillInAddress);
+                autocompleteListener(autocomplete, geocoder);
             }
         </script>
     </th:block>

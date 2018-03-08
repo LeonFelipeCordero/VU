@@ -27,6 +27,13 @@ public class GoogleMapServiceImpl implements GoogleMapService {
                 "&callback=initMap&libraries=visualization,places";
     }
 
+    @Override
+    public String getApiKetForAutoComplete() {
+        return "https://maps.googleapis.com/maps/api/js?key=" +
+                apiService.getApiKey() +
+                "&callback=initAutocomplete&libraries=places";
+    }
+
 
 }
 

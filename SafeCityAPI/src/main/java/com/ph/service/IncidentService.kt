@@ -1,5 +1,7 @@
 package com.ph.service
 
+import com.ph.dto.Danger
+import com.ph.dto.DangerCount
 import com.ph.dto.IncidentCount
 import com.ph.dto.TimeIncidentCount
 import com.ph.form.IncidentForm
@@ -13,4 +15,5 @@ interface IncidentService {
     fun convertFormToIncident(incidentForm: IncidentForm): Incident
 
     fun getStatisticsByZone(lat: Double, lng: Double): MutableList<TimeIncidentCount>
+    fun getDangerCount(lat: Double, lng: Double): Danger
 }

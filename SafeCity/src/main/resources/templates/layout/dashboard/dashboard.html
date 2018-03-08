@@ -1,13 +1,24 @@
 <div layout:decorator="layout/mainLayout" layout:fragment="content">
-    <div class="dashboard">
-        <th:block th:unless="${lat}">
-            <div id="locationField">
-                <input id="autocomplete" placeholder="Enter your address" type="text" />
-            </div>
-        </th:block>
+    <div class="dashboard main-panel">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                        <th:block th:unless="${lat}">
+                            <div id="locationField">
+                                <h2>Look for a location to display the statistics</h2>
+                                <input class="dashboard-autocomplete" id="autocomplete" placeholder="Enter your address"
+                                       type="text"/>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
 
-        <th:block th:if="${lat}">
-            <h1>test2</h1>
-        </th:block>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12" id="statistics-section">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

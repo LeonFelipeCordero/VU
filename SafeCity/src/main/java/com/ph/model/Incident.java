@@ -14,10 +14,6 @@ import java.util.Date;
 /**
  * Created by leon on 25/05/2017.
  */
-//@Document(collection = "incident")
-//@CompoundIndexes({
-//        @CompoundIndex(name = "geolocation", def = "{'location': '2dsphere'}")
-//})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Incident implements Serializable{
 

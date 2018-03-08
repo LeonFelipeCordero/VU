@@ -1,6 +1,8 @@
 package com.ph.service
 
 import com.ph.dao.IncidentDao
+import com.ph.dto.Danger
+import com.ph.dto.DangerCount
 import com.ph.dto.TimeIncidentCount
 import com.ph.form.IncidentForm
 import com.ph.model.Incident
@@ -35,7 +37,9 @@ class IncidentServiceImpl(private val incidentDao: IncidentDao) : IncidentServic
         return incidentDao.getStatistics(lat, lng)
     }
 
-
+    override fun getDangerCount(lat: Double, lng: Double): Danger {
+        return incidentDao.getDangerCount(lat, lng)
+    }
 
     private fun getIncidentLevel(incident: String): Int =
             when (incident) {

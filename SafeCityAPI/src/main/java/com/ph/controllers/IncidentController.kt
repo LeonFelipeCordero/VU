@@ -1,5 +1,6 @@
 package com.ph.controllers
 
+import com.ph.dto.Danger
 import com.ph.dto.TimeIncidentCount
 import com.ph.form.IncidentForm
 import com.ph.model.Incident
@@ -37,4 +38,9 @@ class IncidentController(private val incidentService: IncidentService) {
     fun getDashboardData(@RequestParam(value = "lat") lat: Double,
                          @RequestParam(value = "lng") lng: Double):
             MutableList<TimeIncidentCount> = incidentService.getStatisticsByZone(lat, lng)
+
+    @GetMapping(value = ["/danger-count"], produces = [(MediaType.APPLICATION_JSON_VALUE)])
+    fun getDangerAvg(@RequestParam(value = "lat") lat: Double,
+                     @RequestParam(value = "lng") lng: Double):
+            Danger = incidentService.getDangerCount(lat, lng)
 }
