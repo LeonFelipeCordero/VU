@@ -1,41 +1,16 @@
-<nav class="navbar navbar-default header">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-left">
-                <li style="border-right:  solid #5e5e5e;">
-                    <a class="header-text" href="#">
-                        <p>Vigiles Urbani By PretorianHackers</p>
-                    </a>
-                </li>
-                <li style="margin-left: 10px;">
-                    <a class="header-text navbar-brand" href="/">
-                        <p>Map</p>
-                    </a>
-                </li>
-                <li style="margin-left: 10px;">
-                    <a class="header-text navbar-brand" href="/hot-zones">
-                        <p>Hot Zones</p>
-                    </a>
-                </li>
-                <!--<li style="margin-left: 10px;">-->
-                    <!--<a class="header-text navbar-brand" href="/dashboard">-->
-                        <!--<p>Dashboard</p>-->
-                    <!--</a>-->
-                <!--</li>-->
-                <li>
-                    <a class="header-text header-text" href="/about">
-                        <p>About Us</p>
-                    </a>
-                </li>
-            </ul>
-        </div>
+<nav v-if="active" class="navbar navbar-expand-lg navbar-expand-xl navbar-expand-md" id="header">
+    <a class="navbar-brand" href="#">Vigiles Urbani</a>
+    <div>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Map<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/hot-zones">HotZones</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About Us</a>
+            </li>
+        </ul>
     </div>
 </nav>

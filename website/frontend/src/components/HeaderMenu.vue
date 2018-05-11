@@ -1,0 +1,45 @@
+<template>
+  <nav v-if="active" class="navbar navbar-expand-lg navbar-expand-xl navbar-expand-md" id="header">
+    <a class="navbar-brand" href="#">Vigiles Urbani</a>
+    <div>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Map<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/hot-zones">HotZones</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About Us</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</template>
+
+<script>
+export default {
+  name: 'HeaderMenu',
+  data () {
+    return {
+      active: true,
+      windowWidth: window.innerWidth
+    }
+  },
+  methods: {
+    handleWindowResize: function (event) {
+      this.windowWidth = event.currentTarget.innerWidth
+      this.active = this.windowWidth > 768
+    }
+  },
+  beforeMount: function () {
+    this.active = this.windowWidth > 768
+  },
+  mounted: function () {
+    window.addEventListener('resize', this.handleWindowResize)
+  }
+}
+</script>
+
+<style scoped>
+</style>

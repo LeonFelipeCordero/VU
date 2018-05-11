@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Created by leon on 23/04/2017.
  */
-@Controller()
+@Controller
 public class HomeController {
 
     private final GoogleMapService googleMapService;

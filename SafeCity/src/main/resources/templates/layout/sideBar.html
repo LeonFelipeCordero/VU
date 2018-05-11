@@ -1,12 +1,11 @@
-<div class="sidebar" data-color="red">
+<div v-if="active" class="sidebar" id="sidebar" v-bind:style="styleObject">
     <!--   you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple" -->
-    <div class="sidebar-wrapper">
-        <div class="logo">
-            <a href="/" class="simple-text">
-                Vigiles Urbani
-            </a>
-        </div>
-        <ul class="nav">
+    <button class="menu-button" id="menu" v-on:click="changeStatus"></button>
+    <a class="navbar-brand" href="/">
+        <h4>VU</h4>
+    </a>
+    <div class="navbar-">
+        <ul class="navbar-expand">
             <li>
                 <a href="/">
                     <p>Maps</p>
@@ -18,12 +17,12 @@
                 </a>
             </li>
             <!--<li>-->
-                <!--<a href="/dashboard">-->
-                    <!--<p>Hot Zones</p>-->
-                <!--</a>-->
+            <!--<a href="/dashboard">-->
+            <!--<p>Hot Zones</p>-->
+            <!--</a>-->
             <!--</li>-->
             <li>
-                <a href="">
+                <a href="/about">
                     <p>About Us</p>
                 </a>
             </li>

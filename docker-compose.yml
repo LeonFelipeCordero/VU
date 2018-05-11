@@ -40,6 +40,3 @@ services:
       - mongodb
       - api
     restart: always
-
-networks:
-  network1:

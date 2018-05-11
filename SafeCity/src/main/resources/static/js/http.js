@@ -3,22 +3,6 @@
  *
  */
 
-function ajax(url, data, type){
-    $.ajax({
-        url: url,
-        data: data,
-        type: type,
-        async: false,
-        timeout: 2000,
-        error: function () {
-            return '<h3>Sorry Something Went Wrong!!!!!</h3>';
-        },
-        success: function (template) {
-            return template;
-        }
-    });
-}
-
 function getPopUpFrom(marker) {
     data = {
         lat : marker.getPosition().lat(),
@@ -44,17 +28,18 @@ function getPopUpFrom(marker) {
 }
 
 function getNearIncidents(point, callback){
-    $.ajax({
-        url: '/incident/near',
-        data: { lat: point.lat(), lng: point.lng() },
-        type: 'GET',
-        success: function (res) {
-            callback(res);
-        },
-        error: function (res) {
-            callback('<h3>Sorry Something Went Wrong!!!!!</h3>');
-        }
-    });
+
+    // $.ajax({
+    //     url: '/incident/near',
+    //     data: { lat: point.lat(), lng: point.lng() },
+    //     type: 'GET',
+    //     success: function (res) {
+    //         callback(res);
+    //     },
+    //     error: function (res) {
+    //         callback('<h3>Sorry Something Went Wrong!!!!!</h3>');
+    //     }
+    // });
 }
 
 function getStatsByLocation(lat, lng, callback){

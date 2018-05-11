@@ -7,8 +7,10 @@
 <body>
 <div class="wrapper">
     <section th:substituteby="layout/sideBar"></section>
-    <div class="main-panel normal-view">
+    <div class="main-panel">
         <section th:substituteby="layout/header"></section>
+    </div>
+    <div class="main">
         <section layout:fragment="content" th:remove="tag"></section>
     </div>
 
@@ -20,27 +22,27 @@
         </script>
     </th:block>
 
-    <th:block th:if="${hotMap}">
-        <script th:inline="javascript">
-            function initMap() {
-                initTerrainMapOnCurrentLocation();
-            }
-        </script>
-    </th:block>
+    <!--<th:block th:if="${hotMap}">-->
+        <!--<script th:inline="javascript">-->
+            <!--function initMap() {-->
+                <!--initTerrainMapOnCurrentLocation();-->
+            <!--}-->
+        <!--</script>-->
+    <!--</th:block>-->
 
-    <th:block th:if="${dashboard}">
-        <script th:inline="javascript">
-            function initAutocomplete() {
-                var geocoder = new google.maps.Geocoder();
-                var autocomplete = new google.maps.places.Autocomplete(
-                    (document.getElementById('autocomplete')), {
-                        types: ['geocode']
-                    });
+    <!--<th:block th:if="${dashboard}">-->
+        <!--<script th:inline="javascript">-->
+            <!--function initAutocomplete() {-->
+                <!--var geocoder = new google.maps.Geocoder();-->
+                <!--var autocomplete = new google.maps.places.Autocomplete(-->
+                    <!--(document.getElementById('autocomplete')), {-->
+                        <!--types: ['geocode']-->
+                    <!--});-->
 
-                autocompleteListener(autocomplete, geocoder);
-            }
-        </script>
-    </th:block>
+                <!--autocompleteListener(autocomplete, geocoder);-->
+            <!--}-->
+        <!--</script>-->
+    <!--</th:block>-->
 
     <footer th:substituteby="layout/footer"></footer>
 </div>
