@@ -16,7 +16,7 @@ public class GoogleController {
         this.googleMapsService = googleMapsService;
     }
 
-    @CrossOrigin(origins = "http://${frontend.host}:8080")
+    @CrossOrigin(origins = {"http://${frontend.host}:8080", "frontend"})
     @GetMapping(value = "/key")
     public String geyKey(){
         return googleMapsService.getApiKeyForPlaces();

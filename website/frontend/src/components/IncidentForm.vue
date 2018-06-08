@@ -1,0 +1,83 @@
+<template>
+  <div class="row incident-popup">
+    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+      <div class="card">
+        <div>
+          <h2 class="title">Save Incident:</h2>
+        </div>
+        <div class="content">
+          <form th:action="@{/save-incident}" method="post" th:object="${incidentForm}">
+            <input th:field="*{lat}" type="hidden"/>
+            <input th:field="*{lng}" type="hidden"/>
+
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="label">Title</label>
+                  <input th:field="*{title}" type="text" class="form-control" required
+                         placeholder="Title"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea th:field="*{description}" rows="5" class="form-control" required`
+                            placeholder="Write a description "></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Date</label>
+                  <input th:field="*{date}" class="form-control" type="datetime-local" required/>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <label>Type</label>
+                  <select th:field="*{incident}" class="custom-select">
+                    <option class="header-panel" value="Fight">Fight</option>
+                    <option value="Big Fight">Big Fight</option>
+                    <option value="Thievery">Thievery</option>
+                    <option value="Establishment Thievery">Establishment Thievery</option>
+                    <option value="House Thievery">House Thievery</option>
+                    <option value="Shooting">Shooting</option>
+                    <option value="Murder">Murder</option>
+                    <option value="Drugs">Drugs</option>
+                    <option value="Police Arrest">Police Arrest</option>
+                    <option value="kidnapping">kidnapping</option>
+                    <option value="Rape">rape</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-simple btn-fill pull-righ">Save</button>
+            <div class="clearfix"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</template>
+
+<script>
+    export default {
+        name: "IncidentForm"
+    }
+</script>
+
+<style scoped>
+
+</style>

@@ -3,6 +3,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'GoogleMap',
   props: ['name'],
@@ -12,7 +13,7 @@ export default {
       map: '',
       position: {lat: 28.6353, lng: -106.089},
       popupMaker: '',
-      informationMaker: ''
+      informationMakerpo: ''
     }
   },
   mounted: function () {
@@ -40,19 +41,21 @@ export default {
       })
     },
     setListener () {
-      let map = this.map
-      let marker = this.popupMaker
+      const vueContext = this
       // eslint-disable-next-line
       google.maps.event.addListener(this.map, 'click', function (event) {
-        map.setCenter(event.latLng)
+        vueContext.setPopupMarker(event)
+      })
+    },
+    setPopupMarker (event) {
+      this.map.setCenter(event.latLng)
+      // eslint-disable-next-line
+      const marker = new google.maps.Marker({
         // eslint-disable-next-line
-        marker = new google.maps.Marker({
-          position: event.latLng,
-          // eslint-disable-next-line
-          animation: google.maps.Animation.DROP,
-          map: map
-          // icon: '/img/burglar.png'
-        })
+        animation: google.maps.Animation.DROP,
+        position: event.latLng,
+        map: this.map,
+        icon: '/static/burglar.png'
       })
       this.deleteCurrentMaker()
       this.popupMaker = marker
