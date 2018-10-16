@@ -1,7 +1,12 @@
 package com.ph.service
 
 import com.ph.model.Key
+import com.ph.repository.KeyRepository
+import org.springframework.stereotype.Service
 
-interface GoogleMapsService {
-    fun findGoogleMapsApiKey(): Key
+@Service
+open class GoogleMapsService(private val keyRepository: KeyRepository) {
+
+    fun findGoogleMapsApiKey(): Key = keyRepository.findKeyByName("google.api")
+
 }
