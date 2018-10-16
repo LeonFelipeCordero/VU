@@ -1,5 +1,6 @@
 package com.ph.DTO;
 
+import com.ph.model.CurrentLocation;
 import
         org.junit.Before;
 import org.junit.Test;
@@ -18,29 +19,29 @@ public class CurrentLocationTest {
 
     @Before
     public void setUp(){
-        this.currentLocation = new CurrentLocation(12.5, -15.5);
+        currentLocation = new CurrentLocation(12.5, -15.5);
     }
 
     @Test
     public void getLatitude() throws Exception {
-        assertThat(this.currentLocation.getLatitude()).isEqualTo(12.5);
+        assertThat(currentLocation.getLatitude()).isEqualTo(12.5);
     }
 
     @Test
     public void setLatitude() throws Exception {
-        this.currentLocation.setLatitude(5.5);
-        assertThat(this.currentLocation.getLatitude()).isEqualTo(5.5);
+        currentLocation.setLatitude(5.5);
+        assertThat(currentLocation.getLatitude()).isEqualTo(5.5);
     }
 
     @Test
     public void getLongitude() throws Exception {
-        assertThat(this.currentLocation.getLongitude()).isEqualTo(-15.5);
+        assertThat(currentLocation.getLongitude()).isEqualTo(-15.5);
     }
 
     @Test
     public void setLongitude() throws Exception {
-        this.currentLocation.setLongitude(-10.0);
-        assertThat(this.currentLocation.getLongitude()).isEqualTo(-10.0);
+        currentLocation.setLongitude(-10.0);
+        assertThat(currentLocation.getLongitude()).isEqualTo(-10.0);
     }
 
 }

@@ -1,10 +1,14 @@
-debug=true
-server.port=8080
-security.basic.enabled=false
-spring.thymeleaf.cache=false
-logging.level.org.springframework.security=INFO
-spring.resources.cache-period=0
-spring.thymeleaf.mode=LEGACYHTML5
-spring.jackson.serialization.write-dates-as-timestamps:false
-
-api.hostname=localhost
+debug: true
+server:
+  port: 8080
+spring:
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
+api:
+  host: http://safe-city-api:8081
+---
+spring:
+  profiles: dev
+api:
+  host: http://localhost:8081
