@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-    <section th:substituteby="layout/head"></section>
+    <section th:replace="layout/head"></section>
 </head>
 <!--<body class="hold-transition skin-green sidebar-mini fixed">-->
 <body>
 <div class="wrapper">
-    <section th:substituteby="layout/sideBar"></section>
+    <section th:replace="layout/sideBar"></section>
     <div class="main-panel normal-view">
-        <section th:substituteby="layout/header"></section>
+        <section th:replace="layout/header"></section>
         <section layout:fragment="content" th:remove="tag"></section>
     </div>
 
@@ -42,7 +42,7 @@
         </script>
     </th:block>
 
-    <footer th:substituteby="layout/footer"></footer>
+    <footer th:replace="layout/footer"></footer>
 </div>
 </body>
 </html>

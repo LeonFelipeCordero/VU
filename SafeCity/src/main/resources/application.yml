@@ -1,10 +1,10 @@
 debug: true
 server:
   port: 8080
-spring:
-  thymeleaf:
-    cache: false
-    mode: LEGACYHTML5
+#spring:
+#  thymeleaf:
+#    cache: false
+#    mode: LEGACYHTML5
 api:
   host: http://safe-city-api:8081
 ---
