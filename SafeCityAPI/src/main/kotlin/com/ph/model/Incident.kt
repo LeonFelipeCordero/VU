@@ -1,6 +1,9 @@
 package com.ph.model
 
+import com.ph.serializers.DateSerializer
+import com.ph.serializers.GeoJsonDeserialize
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.index.CompoundIndex
@@ -14,15 +17,12 @@ import java.util.*
 @Serializable
 @Document(collection = "incident")
 @CompoundIndexes(CompoundIndex(name = "geolocation", def = "{'location': '2dsphere'}"))
-data class Incident (
-        val location: GeoJsonPoint,
+data class Incident(
+        @Serializable(with = GeoJsonDeserialize::class) val location: GeoJsonPoint,
         val title: String,
         val description: String,
         val incident: String,
         val level: Int,
-        val date: Date) {
-
-    @Id
-    var _id: String? = null
-
+        @Serializable(with = DateSerializer::class) val date: Date) {
+    @Id var _id: String? = null
 }

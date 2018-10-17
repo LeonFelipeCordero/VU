@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface IncidentRepository : MongoRepository<Incident, String> {
 
-    @Query("{location:{\$nearSphere:{\$geometry:{type:'Point',coordinates:[?0,?1]},\$minDistance:1,\$maxDistance:1000}}}")
+    @Query("{location:{\$nearSphere:{\$geometry:{type:'Point',coordinates:[?1,?0]},\$minDistance:1,\$maxDistance:1000}}}")
     fun getNearIncidents(lat:Double, lng:Double): List<Incident>
 
 //    @Query("")
