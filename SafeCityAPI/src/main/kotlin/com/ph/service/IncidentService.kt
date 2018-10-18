@@ -22,18 +22,6 @@ open class IncidentService(private val incidentDao: IncidentDao,
     fun findNearIncidents(lat: Double, lng: Double): List<Incident> = incidentRepository.getNearIncidents(lat, lng)
 
     fun getStatisticsByZone(lat: Double, lng: Double): List<TimeIncidentCount> = incidentDao.getStatistics(lat, lng)
-//    fun getStatisticsByZone(lat: Double, lng: Double): List<TimeIncidentCount> {
-//        val sixMonthsCalendar = Calendar.getInstance()
-//        val oneYearCalendar = Calendar.getInstance()
-//        val twoYearsCalendar = Calendar.getInstance()
-//        sixMonthsCalendar.add(Calendar.MONTH, -6)
-//        oneYearCalendar.add(Calendar.MONTH, -12)
-//        twoYearsCalendar.add(Calendar.MONTH, -24)
-//        return listOf(
-//                TimeIncidentCount("six months", ),
-//                TimeIncidentCount("one year", ),
-//                TimeIncidentCount("two years", ))
-//    }
 
     fun getDangerCount(lat: Double, lng: Double): Danger = incidentDao.getDangerCount(lat, lng)
 }

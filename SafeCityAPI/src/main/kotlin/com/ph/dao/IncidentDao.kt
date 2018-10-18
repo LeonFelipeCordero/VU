@@ -17,20 +17,6 @@ import java.util.*
 @Service
 open class IncidentDao(private val mongoOperations: MongoOperations) {
 
-    fun getNearIncidents(lat: Double, lng: Double): List<Incident> {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MONTH, -3)// todo 6 months production
-        return mongoOperations.find(
-                Query(Criteria
-                        .where("location")
-                        .nearSphere(Point(lng, lat))
-                        .maxDistance(0.01)
-                        .and("date")
-                        .lte(Date())
-                        .gte(calendar.time)),
-                Incident::class.java)
-    }
-
     fun getStatistics(lat: Double, lng: Double): MutableList<TimeIncidentCount> {
         val sixMonthsCalendar = Calendar.getInstance()
         val oneYearCalendar = Calendar.getInstance()

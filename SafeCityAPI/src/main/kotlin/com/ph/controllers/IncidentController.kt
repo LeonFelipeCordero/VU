@@ -1,9 +1,9 @@
 package com.ph.controllers
 
-import com.ph.request.IncidentRequest
 import com.ph.model.Danger
 import com.ph.model.Incident
 import com.ph.model.TimeIncidentCount
+import com.ph.request.IncidentRequest
 import com.ph.service.IncidentService
 import com.ph.service.convertToIncident
 import org.springframework.http.HttpStatus
