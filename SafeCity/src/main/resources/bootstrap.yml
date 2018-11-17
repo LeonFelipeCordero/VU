@@ -8,6 +8,8 @@ spring:
 ---
 spring:
   profiles: dev
+  application:
+    name: vu-app
   cloud:
     config:
       uri: http://localhost:8888/

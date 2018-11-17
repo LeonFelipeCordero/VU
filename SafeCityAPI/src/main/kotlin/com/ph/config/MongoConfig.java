@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 @Configuration
 public class MongoConfig {
 
-    @Value("${spring.data.mongodb.host}")
+    @Value("${mongodb.host}")
     private String host;
 
     @Bean

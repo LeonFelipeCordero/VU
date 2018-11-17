@@ -1,19 +1,25 @@
-security:
-  basic:
-    enabled: true
-  user:
-    name: SafeCity
-    password: SafeCity
+#security:
+#  basic:
+#    enabled: true
+#  user:
+#    name: SafeCity
+#    password: SafeCity
 spring:
   application:
     name: vu-api
   cloud:
     config:
       uri: http://config-server:8888/
+mongodb:
+  host: mongodb
 
 ---
 spring:
   profiles: dev
+  application:
+    name: vu-api
   cloud:
     config:
       uri: http://localhost:8888/
+mongodb:
+  host: localhost
