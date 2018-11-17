@@ -1,0 +1,5 @@
+debug: true
+server:
+ port: 8080
+api:
+ host: http://safe-city-api:8081

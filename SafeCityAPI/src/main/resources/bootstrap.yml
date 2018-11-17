@@ -1,0 +1,19 @@
+security:
+  basic:
+    enabled: true
+  user:
+    name: SafeCity
+    password: SafeCity
+spring:
+  application:
+    name: vu-api
+  cloud:
+    config:
+      uri: https://config-server:8888/
+
+---
+spring:
+  profiles: dev
+  cloud:
+    config:
+      uri: https://localhost:8888/

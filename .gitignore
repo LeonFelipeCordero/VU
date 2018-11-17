@@ -10,4 +10,7 @@ DashboardRenderingAPI/.mvn
 importMexicoCityData/.idea
 .idea/
 /data
+*.iml
+*.cmd
+
 

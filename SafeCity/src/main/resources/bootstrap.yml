@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: vu-app
+  cloud:
+    config:
+      uri: https://config-server:8888/
+
+---
+spring:
+  profiles: dev
+  cloud:
+    config:
+      uri: https://localhost:8888/
