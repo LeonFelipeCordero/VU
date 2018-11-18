@@ -29,4 +29,9 @@ public class MongoConfig {
     public MongoOperations mongoOperations() {
         return new MongoTemplate(mongoDbFactory());
     }
+
+    @Bean
+    public MongoTemplate mongoTemplate() {
+        return new MongoTemplate(mongoDbFactory());
+    }
 }

@@ -21,7 +21,7 @@ services:
     ports: 
       - "8081:8081"
       - "8001:8001"      
-    command: java -jar -Dspring.config.location=classpath:default.properties,classpath:production.properties /SafeCityAPI/target/safe-city-api-1.0.jar #mvn clean spring-boot:run -Dspring.config.location=classpath:default.     
+    command: mvn spring-boot:run #java -jar -Dspring.config.location=classpath:default.properties,classpath:production.properties /SafeCityAPI/target/safe-city-api-1.0.jar #mvn clean spring-boot:run -Dspring.config.location=classpath:default.     
     depends_on:
       - mongodb
     restart: always
@@ -35,7 +35,7 @@ services:
     ports: 
       - "8080:8080"
       - "8000:8000"
-    command: java -jar -Dspring.config.location=classpath:default.properties,classpath:production.properties /SafeCity/target/safe-city-1.0.jar
+    command: mvn spring-boot:run #java -jar -Dspring.config.location=classpath:default.properties,classpath:production.properties /SafeCity/target/safe-city-1.0.jar
     depends_on:
       - mongodb
       - api
