@@ -12,12 +12,6 @@ spring:
       uri: http://config-server:8888/
 mongodb:
   host: mongodb
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
 
 ---
 spring:

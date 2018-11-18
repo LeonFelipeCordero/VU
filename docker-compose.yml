@@ -12,12 +12,14 @@ services:
         - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null
 
-  api:
+  vu-api:
+    container_name: "vu-api"
     build: ./SafeCityAPI
-    working_dir: /SafeCityAPI/target
+    working_dir: /SafeCityAPI
     volumes:
+      - ./SafeCityAPI:/SafeCityAPI
       - ./SafeCityAPI/target:/SafeCityAPI/target
-      - ~/.m2:/home/leon/.m2
+      # - ~/.m2:/home/leon/.m2
     ports: 
       - "8081:8081"
       - "8001:8001"      
@@ -26,20 +28,41 @@ services:
       - mongodb
     restart: always
   
-  webapp:
+  vu-app:
+    container_name: "vu-app"
     build: ./SafeCity
-    working_dir: /SafeCity/target
+    working_dir: /SafeCity/
     volumes:
+      - ./SafeCity:/SafeCity
       - ./SafeCity/target:/SafeCity/target
-      - ~/.m2:/home/leon/.m2
+      # - ~/.m2:/home/leon/.m2
     ports: 
       - "8080:8080"
       - "8000:8000"
     command: mvn spring-boot:run #java -jar -Dspring.config.location=classpath:default.properties,classpath:production.properties /SafeCity/target/safe-city-1.0.jar
     depends_on:
       - mongodb
-      - api
+      - vu-api
     restart: always
 
-networks:
-  network1:
+  config-server:
+    container_name: "config-server"
+    build: ./config-server
+    working_dir: /config-server
+    volumes:
+      - ./config-server:/config-server
+      - ./config-server/target:/config-server/target
+    ports:
+      - "8888:8888"
+    command: mvn spring-boot:run
+    restart: always
+
+  dataflow-server:
+    image: springcloud/spring-cloud-dataflow-server-local:1.7.1.RELEASE
+    container_name: dataflow-server
+    ports:
+      - "9393:9393"
+      - "9000-9010:9000-9010"
+    # environment:
+      # - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.kafka.binder.brokers=kafka:9092
+      # - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.kafka.binder.zkNodes=zookeeper:2181
