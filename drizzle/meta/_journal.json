@@ -15,6 +15,13 @@
       "when": 1792315371125,
       "tag": "0001_spatial_index",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792330374852,
+      "tag": "0002_dataset_imports",
+      "breakpoints": true
     }
   ]
 }

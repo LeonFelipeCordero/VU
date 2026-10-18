@@ -11,6 +11,8 @@
     "start": "node --env-file-if-exists=.env.local .output/server/index.mjs",
     "check": "tsc --noEmit",
     "test": "vitest run",
+    "data:import": "tsx --env-file-if-exists=.env.local scripts/import-dataset.ts",
+    "data:export": "tsx --env-file-if-exists=.env.local scripts/export-incidents.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx --env-file-if-exists=.env.local scripts/migrate.ts"
   },

@@ -1,3 +1,5 @@
+export { datasets, sourceRecords, incidents } from './import-schema'
+
 import { sql } from 'drizzle-orm'
 import { check, integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
