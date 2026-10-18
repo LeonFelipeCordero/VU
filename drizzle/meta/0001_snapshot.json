@@ -1,0 +1,102 @@
+{
+  "id": "789d59bd-6847-4177-a1f3-10a53b3c0234",
+  "prevId": "bc184f48-56a4-40e4-8efd-1e49df0a78ff",
+  "version": "6",
+  "dialect": "sqlite",
+  "tables": {
+    "locations": {
+      "name": "locations",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "latitude": {
+          "name": "latitude",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "longitude": {
+          "name": "longitude",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "locations_latitude_check": {
+          "name": "locations_latitude_check",
+          "value": "typeof(\"locations\".\"latitude\") IN ('real', 'integer') AND \"locations\".\"latitude\" BETWEEN -90 AND 90"
+        },
+        "locations_longitude_check": {
+          "name": "locations_longitude_check",
+          "value": "typeof(\"locations\".\"longitude\") IN ('real', 'integer') AND \"locations\".\"longitude\" BETWEEN -180 AND 180"
+        },
+        "locations_source_check": {
+          "name": "locations_source_check",
+          "value": "\"locations\".\"source\" IN ('app', 'crawler')"
+        },
+        "locations_description_check": {
+          "name": "locations_description_check",
+          "value": "length(\"locations\".\"description\") <= 2000 AND length(trim(\"locations\".\"description\", char(9,10,11,12,13,32,160,5760,8192,8193,8194,8195,8196,8197,8198,8199,8200,8201,8202,8232,8233,8239,8287,12288,65279))) > 0 AND instr(\"locations\".\"description\", char(0)) = 0"
+        },
+        "locations_created_at_check": {
+          "name": "locations_created_at_check",
+          "value": "typeof(\"locations\".\"created_at\") = 'integer' AND \"locations\".\"created_at\" >= 0"
+        },
+        "locations_updated_at_check": {
+          "name": "locations_updated_at_check",
+          "value": "typeof(\"locations\".\"updated_at\") = 'integer' AND \"locations\".\"updated_at\" >= \"locations\".\"created_at\""
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

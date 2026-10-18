@@ -13,4 +13,18 @@ importMexicoCityData/.idea
 *.iml
 *.cmd
 
+# TanStack Start prototype
+node_modules/
+.data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.output/
+.tanstack/
+.vite/
+dist/
+.env
+.env.*
+!.env.example
+
 
