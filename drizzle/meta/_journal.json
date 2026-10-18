@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792315370620,
+      "tag": "0000_locations",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792315371125,
+      "tag": "0001_spatial_index",
+      "breakpoints": true
+    }
+  ]
+}
