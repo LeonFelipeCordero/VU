@@ -4,7 +4,7 @@ Vigiles Urbani / SafeCity collects location-based community reports and displays
 
 ## Current rebuild direction
 
-The initial prototype uses **Drizzle ORM and local SQLite**, replacing the originally proposed managed backend. Keep one TanStack Start application and leave the legacy Kotlin services and deployment unchanged during acceptance checks. See [development notes](docs/DEVELOPMENT.md) for setup and operational limits.
+The application uses **TanStack Start, Drizzle ORM, and local SQLite**. The legacy Kotlin services and deployment files have been removed. Keep one TanStack Start application. See [development notes](docs/DEVELOPMENT.md) for setup and operational limits.
 
 ### Stack
 
@@ -66,13 +66,13 @@ drizzle/                Versioned SQL migrations
 tests/                  Database, component, router checks
 ```
 
-## Legacy application and migration boundaries
+## Legacy removal and data boundaries
 
-`SafeCity/` is the Kotlin/Spring template frontend. `SafeCityAPI/` is the MongoDB-backed REST API. Spring configuration services, CSV import tools, MongoDB query examples, and Docker configuration remain separate and unchanged.
+The Kotlin/Spring frontend, MongoDB REST API, Spring configuration services, CSV import tools, MongoDB query examples, and legacy Docker configuration have been removed from this checkout. Their source remains in Git history.
 
 Legacy behavior includes nearby incident markers and submission, hot-zone heatmaps, category visualization, and historical/category-weighted statistics. The minimal prototype does not claim feature parity. Legacy title, category, occurrence date, and weight fields are not silently mapped to the new model.
 
-Do not present randomized import data as real reports. Confirm whether MongoDB data is real and must be retained before importing or deleting anything. If data migration becomes necessary, use a separate environment, compare records and query results, and keep a rollback path. Do not retire legacy services before acceptance checks pass.
+Removing legacy source does not migrate or delete existing MongoDB records and does not stop deployed services. Do not present randomized import data as real reports. Confirm whether MongoDB data is real and must be retained before importing or deleting records. If data migration becomes necessary, use a separate environment, compare records and query results, and keep a rollback path.
 
 Reports are unverified submissions, not proven incidents or a reliable safety score. Missing reports do not demonstrate an absence of incidents.
 
