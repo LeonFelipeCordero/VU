@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
-import { geocoding, type GeocodingFeature } from '@maptiler/client'
+import { geocoding } from '@maptiler/client'
+import { searchPhoton, type AddressResult } from '../../lib/photon'
 import type { Coordinates } from '../../lib/report'
 
 export function LocationSearch({ onSelect, selectionRevision }: { onSelect: (location: Coordinates) => void; selectionRevision?: RefObject<number> }) {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<GeocodingFeature[]>([])
+  const [results, setResults] = useState<AddressResult[]>([])
   const [message, setMessage] = useState('')
   const [searching, setSearching] = useState(false)
   const [locating, setLocating] = useState(false)
@@ -19,17 +20,17 @@ export function LocationSearch({ onSelect, selectionRevision }: { onSelect: (loc
 
   async function search(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!query.trim() || !key) return
+    if (!query.trim()) return
     const current = ++request.current
     setLocating(false)
     setSearching(true)
     setResults([])
     setMessage('')
     try {
-      const response = await geocoding.forward(query.trim(), { apiKey: key, limit: 5 })
+      const features = key ? (await geocoding.forward(query.trim(), { apiKey: key, limit: 5 })).features : await searchPhoton(query.trim())
       if (current !== request.current) return
-      setResults(response.features)
-      if (response.features.length === 0) setMessage('No addresses found. Try another search or enter coordinates.')
+      setResults(features)
+      if (features.length === 0) setMessage('No addresses found. Try another search or enter coordinates.')
     } catch {
       if (current === request.current) setMessage('Address search failed. Try again or enter coordinates.')
     } finally {
@@ -76,11 +77,11 @@ export function LocationSearch({ onSelect, selectionRevision }: { onSelect: (loc
       <form onSubmit={search} className="address-search">
         <label htmlFor="address">Search address</label>
         <div className="input-action">
-          <input id="address" value={query} onChange={(event) => { setQuery(event.target.value); setResults([]); request.current++; setSearching(false); setLocating(false) }} placeholder="Street, neighborhood, or city" maxLength={200} disabled={!key} />
-          <button type="submit" disabled={!key || searching || !query.trim()}>{searching ? 'Searching…' : 'Search'}</button>
+          <input id="address" value={query} onChange={(event) => { setQuery(event.target.value); setResults([]); request.current++; setSearching(false); setLocating(false) }} placeholder="Street, neighborhood, or city" maxLength={200} />
+          <button type="submit" disabled={searching || !query.trim()}>{searching ? 'Searching…' : 'Search'}</button>
         </div>
       </form>
-      {!key && <p className="hint">Address search needs a MapTiler key. You can enter coordinates below.</p>}
+      {!key && <p className="hint">Address search by <a href="https://photon.komoot.io/" target="_blank" rel="noreferrer">Photon</a>. Search only when you press Search.</p>}
       {results.length > 0 && <ul className="search-results" aria-label="Address results">{results.map((feature) => (
         <li key={feature.id}><button type="button" onClick={() => { select({ longitude: feature.center[0], latitude: feature.center[1] }); setQuery(feature.place_name); setMessage('Location selected. The address will not be saved.') }}>{feature.place_name}</button></li>
       ))}</ul>}

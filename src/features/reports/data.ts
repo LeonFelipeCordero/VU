@@ -6,10 +6,12 @@ export const getNearbyReports = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     try {
       const { getReportsStore } = await import('../../db/reports.server')
-      return { status: 'ready' as const, ...getReportsStore().nearby(data) }
+      const { nearbyHistoricalIncidents } = await import('../../db/historical.server')
+      const { getDatabase } = await import('../../db/database.server')
+      return { status: 'ready' as const, ...getReportsStore().nearby(data), historical: nearbyHistoricalIncidents(getDatabase(), data) }
     } catch (error) {
       console.error('Failed to load reports.', error)
-      return { status: 'unavailable' as const, reports: [], limited: false }
+      return { status: 'unavailable' as const, reports: [], limited: false, historical: { incidents: [], limited: false } }
     }
   })
 

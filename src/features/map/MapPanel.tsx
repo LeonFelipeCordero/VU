@@ -3,32 +3,38 @@ import type { GeoJSONSource, Map, Marker } from 'maplibre-gl'
 import type { Coordinates, LocationReport } from '../../lib/report'
 import { formatCoordinates } from '../../lib/location'
 import { addReportLayers, expandCluster, reportFeatures } from './report-layers'
+import { addHistoricalLayer, historicalFeatures } from './historical-layers'
+import type { HistoricalIncident } from '../../lib/historical-incident'
+import { openStreetMapStyle } from './map-style'
+import mapWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 
 interface Props {
   center: Coordinates
   selected: Coordinates | null
   reports: LocationReport[]
+  historical?: HistoricalIncident[]
   onSelect: (location: Coordinates) => void
 }
 
-export function MapPanel({ center, selected, reports, onSelect }: Props) {
+export function MapPanel({ center, selected, reports, historical = [], onSelect }: Props) {
   const container = useRef<HTMLDivElement>(null)
   const map = useRef<Map | null>(null)
-  const latest = useRef({ center, reports, onSelect })
-  latest.current = { center, reports, onSelect }
+  const latest = useRef({ center, reports, historical, onSelect })
+  latest.current = { center, reports, historical, onSelect }
   const [ready, setReady] = useState(false)
   const [error, setError] = useState('')
   const key = import.meta.env.VITE_MAPTILER_KEY
 
   useEffect(() => {
-    if (!key || !container.current) return
+    if (!container.current) return
     let disposed = false
     let instance: Map | null = null
     import('maplibre-gl').then((lib) => {
       if (disposed || !container.current) return
+      lib.setWorkerUrl(mapWorkerUrl)
       instance = new lib.Map({
         container: container.current,
-        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${encodeURIComponent(key)}`,
+        style: key ? `https://api.maptiler.com/maps/streets-v2/style.json?key=${encodeURIComponent(key)}` : openStreetMapStyle,
         center: [latest.current.center.longitude, Math.max(-85, Math.min(85, latest.current.center.latitude))],
         zoom: 14,
       })
@@ -37,12 +43,13 @@ export function MapPanel({ center, selected, reports, onSelect }: Props) {
       instance.on('error', () => setError('Map tiles could not load. Search or enter coordinates instead.'))
       instance.on('load', () => {
         if (!instance || disposed) return
+        addHistoricalLayer(instance, latest.current.historical)
         addReportLayers(instance, latest.current.reports)
         setReady(true)
       })
       instance.on('click', async (event) => {
         if (!instance?.getLayer('report-points')) return
-        const point = instance.queryRenderedFeatures(event.point, { layers: ['report-points'] })[0]
+        const point = instance.queryRenderedFeatures(event.point, { layers: ['report-points', 'historical-points'] })[0]
         if (point?.geometry.type === 'Point') {
           new lib.Popup().setLngLat(event.lngLat).setText(String(point.properties.description)).addTo(instance)
           return
@@ -67,7 +74,9 @@ export function MapPanel({ center, selected, reports, onSelect }: Props) {
     if (!ready || !map.current) return
     const source = map.current.getSource('reports') as GeoJSONSource | undefined
     source?.setData(reportFeatures(reports))
-  }, [ready, reports])
+    const historicalSource = map.current.getSource('historical-incidents') as GeoJSONSource | undefined
+    historicalSource?.setData(historicalFeatures(historical))
+  }, [ready, reports, historical])
 
   useEffect(() => {
     if (!ready || !map.current) return
@@ -80,18 +89,17 @@ export function MapPanel({ center, selected, reports, onSelect }: Props) {
     <section className="map-panel" aria-label="Report map">
       <div className="map-toolbar">
         <div><strong>Explore the area</strong><p>Reports within 1 km of {formatCoordinates(center)}</p></div>
-        <span className="map-legend">● Reports <span>● Selected point</span></span>
+        <span className="map-legend">● Reports <span className="historical-legend">● Historical collisions</span><span>● Selected point</span></span>
       </div>
       <div className="map-canvas" ref={container} aria-label="Interactive map" />
-      {!key && <div className="map-empty"><h2>The map needs a MapTiler key</h2><p>Set VITE_MAPTILER_KEY to enable the map and address search. You can still select a location with coordinates or your device.</p></div>}
-      {key && !ready && !error && <p className="map-notice" role="status">Loading map…</p>}
+      {!ready && !error && <p className="map-notice" role="status">Loading map…</p>}
       {error && <p className="map-notice" role="alert">{error}</p>}
       {Math.abs(center.latitude) > 85 && <p className="map-notice">This point is outside the map projection. The coordinates and report search are unchanged.</p>}
       {ready && <button className="map-center-button secondary" onClick={() => {
         const position = map.current?.getCenter().wrap()
         if (position) onSelect({ latitude: position.lat, longitude: position.lng })
       }}>Select map center</button>}
-      <p className="map-caption">Click to select a point. Drag the green pin to adjust it. Brown circles show submitted reports, not a measure of danger.</p>
+      <p className="map-caption">Click to select a point. Drag the green pin to adjust it. Brown circles show community reports; blue circles show historical source records. Neither measures current danger.</p>
     </section>
   )
 }

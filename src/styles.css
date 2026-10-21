@@ -64,6 +64,10 @@ summary { padding: 0.5rem 0; min-height: 36px; }
 .map-legend { color: oklch(45% 0.07 77); font-size: 0.7rem; align-self: center; white-space: nowrap; }
 .map-legend span { color: var(--accent); margin-left: 0.5rem; }
 .map-canvas { height: 440px; width: 100%; }
+.map-legend .historical-legend { color: #305b91; }
+.historical-summary { padding: 1.25rem 1.5rem; border-top: 1px solid var(--line); }
+.historical-summary h2 { margin-bottom: .5rem; }
+.historical-summary p { margin: .5rem 0; font-size: .8rem; }
 .map-empty { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); width: min(80%, 430px); text-align: center; }
 .map-empty h2 { font-size: 1.25rem; }
 .map-empty p { color: var(--muted); font-size: 0.875rem; }

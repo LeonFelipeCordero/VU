@@ -1,5 +1,7 @@
 .idea/
 /data
+__pycache__/
+*.pyc
 
 # TanStack Start
 node_modules/
