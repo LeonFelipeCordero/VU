@@ -1,0 +1,9 @@
+{
+  "maxFileLines": 600,
+  "maxFunctionLines": 100,
+  "maxParameters": 4,
+  "maxWeightedComplexity": 8,
+  "maxDecisionDepth": 3,
+  "maxNestedLoops": 0,
+  "maxCircularImportGroups": 0
+}

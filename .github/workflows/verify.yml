@@ -9,6 +9,25 @@ permissions:
   contents: read
 
 jobs:
+  atlas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/cache@v4
+        id: atlas-cache
+        with:
+          path: ~/.cargo/bin/atlas
+          key: atlas-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package.json') }}
+      - if: steps.atlas-cache.outputs.cache-hit != 'true'
+        run: npm run atlas:install
+      - run: npm run atlas:report
+      - run: npm run atlas:check
+
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 10

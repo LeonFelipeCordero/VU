@@ -40,6 +40,24 @@ describe('historical map data', () => {
     expect(historicalLabel(result.incidents[0])).toContain('Exact occurrence date is unavailable')
   })
 
+  it.each([
+    [{ year: 2024, month: 1 }, '2024-01'],
+    [{ year: 2024, month: 12 }, '2024-12'],
+    [{ year: 2024 }, '2024'],
+    [{ year: 2024, month: 0 }, '2024'],
+    [{ year: 2024, month: 13 }, '2024'],
+    [{ year: 2024, month: 1.5 }, '2024'],
+    [{ year: 0 }, 'Occurrence date unspecified'],
+    [{ year: 10000 }, 'Occurrence date unspecified'],
+    [{ year: 2024.5 }, 'Occurrence date unspecified'],
+    [null, 'Occurrence date unspecified'],
+  ] as const)('formats partial occurrence time %j without inventing a date', (time, expected) => {
+    const label = historicalLabel({ id: 1, latitude: 52.52, longitude: 13.405,
+      category: 'traffic_collision', datasetName: 'Fixture', datasetVersion: '2024-v2',
+      sourceUrl: 'https://example.org', license: 'Test only', time })
+    expect(label.split('\n')[0]).toBe(`Road collision involving personal injury · ${expected}`)
+  })
+
   it('marks truncation explicitly rather than implying complete local coverage', () => {
     const db = setup(Array.from({ length: 201 }, (_, index) => record(String(index), 52.52, 13.405)))
     const result = nearbyHistoricalIncidents(db, { latitude: 52.52, longitude: 13.405 })
