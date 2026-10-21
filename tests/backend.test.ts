@@ -11,7 +11,7 @@ import { nearbyQuery, distanceMeters } from '../src/db/spatial.server'
 import { MAX_DESCRIPTION_LENGTH, validateReport } from '../src/lib/report'
 import type { Coordinates } from '../src/lib/report'
 
-const center = { latitude: 28.64, longitude: -106.0738 }
+const center = { latitude: 52.52, longitude: 13.405 }
 const input = { location: center, description: '  Test report  ' }
 const migrationsFolder = fileURLToPath(new URL('../drizzle', import.meta.url))
 const databases: ReportsDatabase[] = []

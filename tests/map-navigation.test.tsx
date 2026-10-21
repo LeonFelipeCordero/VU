@@ -18,10 +18,10 @@ vi.mock('../src/features/map/MapPanel', () => ({
 beforeEach(() => vi.stubGlobal('scrollTo', vi.fn()))
 afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 
-async function openMap() {
+async function openMap(url = '/') {
   const root = createRootRoute({ component: () => <><Link to="/">Map</Link><Outlet /></> })
   const route = createRoute({ ...Route.options, path: '/', getParentRoute: () => root })
-  const router = createRouter({ routeTree: root.addChildren([route]), history: createMemoryHistory({ initialEntries: ['/'] }) })
+  const router = createRouter({ routeTree: root.addChildren([route]), history: createMemoryHistory({ initialEntries: [url] }) })
   await router.load()
   render(<RouterProvider router={router} />)
   await screen.findByRole('heading', { name: 'See a place. Share what happened.' })
@@ -29,6 +29,24 @@ async function openMap() {
 }
 
 describe('map selection and URL navigation', () => {
+  it('uses device location automatically and removes the nearby reports box', async () => {
+    let resolve!: PositionCallback
+    vi.stubGlobal('navigator', { ...navigator, geolocation: { getCurrentPosition: vi.fn((success: PositionCallback) => { resolve = success }) } })
+    const router = await openMap()
+    expect(navigator.geolocation.getCurrentPosition).toHaveBeenCalledOnce()
+    act(() => resolve({ coords: { latitude: 52.52, longitude: 13.405 } } as GeolocationPosition))
+    await waitFor(() => expect(router.state.location.search).toMatchObject({ lat: 52.52, lng: 13.405 }))
+    expect(screen.queryByRole('heading', { name: 'Nearby reports' })).toBeNull()
+  })
+
+  it('does not replace coordinates from a shared URL with device location', async () => {
+    const locate = vi.fn()
+    vi.stubGlobal('navigator', { ...navigator, geolocation: { getCurrentPosition: locate } })
+    const router = await openMap('/?lat=52.52&lng=13.405')
+    expect(router.state.location.search).toMatchObject({ lat: 52.52, lng: 13.405 })
+    expect(locate).not.toHaveBeenCalled()
+  })
+
   it('clears an old submission point on Map navigation without discarding the draft', async () => {
     const router = await openMap()
     await userEvent.click(screen.getByRole('button', { name: 'Select New York on map' }))
@@ -37,7 +55,7 @@ describe('map selection and URL navigation', () => {
     expect((screen.getByRole('button', { name: 'Submit report' }) as HTMLButtonElement).disabled).toBe(false)
     await userEvent.click(screen.getByRole('link', { name: 'Map' }))
     await screen.findByText('Select a point on the map, search, or enter coordinates.')
-    expect(router.state.location.search).toMatchObject({ lat: 28.64, lng: -106.0738 })
+    expect(router.state.location.search).toMatchObject({ lat: 0, lng: 0 })
     expect((screen.getByRole('button', { name: 'Submit report' }) as HTMLButtonElement).disabled).toBe(true)
     expect((screen.getByLabelText('What happened?') as HTMLTextAreaElement).value).toBe('Keep this draft')
   })
@@ -46,7 +64,7 @@ describe('map selection and URL navigation', () => {
     let resolve!: PositionCallback
     vi.stubGlobal('navigator', { ...navigator, geolocation: { getCurrentPosition: (success: PositionCallback) => { resolve = success } } })
     const router = await openMap()
-    await userEvent.click(screen.getByRole('button', { name: 'Use my location' }))
+    expect(screen.getByRole('button', { name: 'Finding location…' })).toBeTruthy()
     await userEvent.click(screen.getByRole('button', { name: 'Select New York on map' }))
     await waitFor(() => expect(router.state.location.search).toMatchObject({ lat: 40.7128, lng: -74.006 }))
     act(() => resolve({ coords: { latitude: 10, longitude: 20 } } as GeolocationPosition))

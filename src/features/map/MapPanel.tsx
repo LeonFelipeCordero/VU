@@ -36,7 +36,7 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
         container: container.current,
         style: key ? `https://api.maptiler.com/maps/streets-v2/style.json?key=${encodeURIComponent(key)}` : openStreetMapStyle,
         center: [latest.current.center.longitude, Math.max(-85, Math.min(85, latest.current.center.latitude))],
-        zoom: 14,
+        zoom: latest.current.center.latitude === 0 && latest.current.center.longitude === 0 ? 2 : 14,
       })
       map.current = instance
       instance.addControl(new lib.NavigationControl(), 'top-right')
@@ -80,7 +80,7 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
 
   useEffect(() => {
     if (!ready || !map.current) return
-    map.current.jumpTo({ center: [center.longitude, Math.max(-85, Math.min(85, center.latitude))] })
+    map.current.jumpTo({ center: [center.longitude, Math.max(-85, Math.min(85, center.latitude))], zoom: center.latitude === 0 && center.longitude === 0 ? 2 : 14 })
   }, [ready, center.latitude, center.longitude])
 
   useSelectionMarker(map, { ready, selected, onSelect, onError: setError })
@@ -99,7 +99,6 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
         const position = map.current?.getCenter().wrap()
         if (position) onSelect({ latitude: position.lat, longitude: position.lng })
       }}>Select map center</button>}
-      <p className="map-caption">Click to select a point. Drag the green pin to adjust it. Brown circles show community reports; blue circles show historical source records. Neither measures current danger.</p>
     </section>
   )
 }

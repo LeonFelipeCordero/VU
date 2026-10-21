@@ -3,7 +3,7 @@ import { geocoding } from '@maptiler/client'
 import { searchPhoton, type AddressResult } from '../../lib/photon'
 import type { Coordinates } from '../../lib/report'
 
-export function LocationSearch({ onSelect, selectionRevision }: { onSelect: (location: Coordinates) => void; selectionRevision?: RefObject<number> }) {
+export function LocationSearch({ onSelect, selectionRevision, autoLocate = false }: { onSelect: (location: Coordinates) => void; selectionRevision?: RefObject<number>; autoLocate?: boolean }) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<AddressResult[]>([])
   const [message, setMessage] = useState('')
@@ -15,6 +15,7 @@ export function LocationSearch({ onSelect, selectionRevision }: { onSelect: (loc
 
   useEffect(() => {
     mounted.current = true
+    if (autoLocate) locate()
     return () => { mounted.current = false; request.current++ }
   }, [])
 

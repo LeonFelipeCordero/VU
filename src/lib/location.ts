@@ -1,7 +1,7 @@
 import type { Coordinates } from './report'
 
-// Chihuahua is a navigation default, not a coverage or data-availability claim.
-export const DEFAULT_LOCATION: Coordinates = { latitude: 28.64, longitude: -106.0738 }
+// Show the world until device location or an explicit location is available.
+export const DEFAULT_LOCATION: Coordinates = { latitude: 0, longitude: 0 }
 
 function coordinate(value: unknown, min: number, max: number, fallback: number) {
   if (typeof value !== 'number' && typeof value !== 'string') return fallback

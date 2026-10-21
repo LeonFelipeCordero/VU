@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ReportForm } from '../src/features/reports/ReportForm'
 
-const location = { latitude: 28.64, longitude: -106.0738 }
+const location = { latitude: 52.52, longitude: 13.405 }
 afterEach(cleanup)
 
 describe('report submission flow', () => {

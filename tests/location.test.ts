@@ -5,8 +5,8 @@ import type { LocationReport } from '../src/lib/report'
 
 describe('location URL state', () => {
   it('retains longitude and latitude without reversing them', () => {
-    expect(parseLocationSearch({ lat: '28.64', lng: '-106.0738' })).toEqual({ lat: 28.64, lng: -106.0738 })
-    expect(formatCoordinates(DEFAULT_LOCATION)).toBe('28.64000, -106.07380')
+    expect(parseLocationSearch({ lat: '52.52', lng: '13.405' })).toEqual({ lat: 52.52, lng: 13.405 })
+    expect(formatCoordinates(DEFAULT_LOCATION)).toBe('0.00000, 0.00000')
   })
 
   it.each([NaN, Infinity, '', null, {}, [], 'not-a-number', 999])('uses the navigation default for invalid values: %s', (value) => {
@@ -18,9 +18,9 @@ describe('location URL state', () => {
   })
 
   it('converts stored named coordinates to GeoJSON longitude, latitude order', () => {
-    const report: LocationReport = { id: 1, location: DEFAULT_LOCATION, description: '<script>not HTML</script>', source: 'app', createdAt: 0, updatedAt: 0 }
+    const report: LocationReport = { id: 1, location: { latitude: 52.52, longitude: 13.405 }, description: '<script>not HTML</script>', source: 'app', createdAt: 0, updatedAt: 0 }
     const collection = reportFeatures([report])
-    expect(collection.features[0].geometry.coordinates).toEqual([-106.0738, 28.64])
+    expect(collection.features[0].geometry.coordinates).toEqual([13.405, 52.52])
     expect(collection.features[0].properties.description).toBe(report.description)
   })
 })
