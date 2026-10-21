@@ -17,4 +17,6 @@ It installs `atlas` in Cargo's binary directory, not `node_modules`.
 
 Run both Atlas commands from the repository root after changes. Review findings, fix them, and rerun the checks across the entire project. Atlas honors `.gitignore`; no extra analysis exclusions apply. These commands analyze current sources without a database, migrations, or saved index.
 
-The `atlas` job in `.github/workflows/verify.yml` installs the same pinned revision and runs both commands on pull requests and pushes to `main`. Its binary cache follows the revision through `package.json`. A failed check fails the job. Normal type checks, tests, and builds remain required; Atlas does not replace them.
+The dedicated `Atlas CI` workflow in `.github/workflows/atlas.yml` follows Matato-pi's CI structure: pull requests targeting `main` and pushes to `main`, read-only permissions, cancellation of superseded runs, JSON check output, and an explicit zero-findings gate. It uses the pinned Rust CLI installer rather than Matato-pi's older Python installer. Its binary cache follows the revision through `package.json`.
+
+The workflow checks the whole repository and writes JSON to `$RUNNER_TEMP/atlasReport.json`. Both the Atlas exit status and `jq -e '.findings == []'` must pass. Normal type checks, tests, and builds remain in `.github/workflows/verify.yml`; Atlas does not replace them.
