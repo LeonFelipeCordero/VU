@@ -13,45 +13,69 @@ function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
 }
 
-function validateIncident(input: IncidentInput) {
-  if (!object(input)) throw new Error('Incident must be an object.')
+function validateIncidentLocation(input: IncidentInput) {
   if (input.latitude != null || input.longitude != null) {
     validateCoordinates({ latitude: input.latitude!, longitude: input.longitude! })
     if (!input.locationMethod || !input.locationPrecision) throw new Error('Location method and precision are required.')
   }
+}
+
+function validateTimestamps(input: IncidentInput) {
   for (const field of ['occurredStart', 'occurredEnd', 'publishedAt'] as const) {
     const value = input[field]
     if (value != null && !Number.isSafeInteger(value)) throw new Error(`${field} must be epoch milliseconds.`)
   }
+}
+
+function validateIncidentTime(input: IncidentInput) {
+  validateTimestamps(input)
   if (input.occurredEnd != null && (input.occurredStart == null || input.occurredEnd < input.occurredStart)) {
     throw new Error('Occurrence interval is invalid.')
   }
   if (input.time != null && !object(input.time)) throw new Error('Time metadata must be an object.')
+}
+
+function validateIncident(input: IncidentInput) {
+  if (!object(input)) throw new Error('Incident must be an object.')
+  validateIncidentLocation(input)
+  validateIncidentTime(input)
   if (!Array.isArray(input.qualityFlags) || input.qualityFlags.some((flag) => typeof flag !== 'string')) {
     throw new Error('Quality flags must be strings.')
   }
   if (typeof input.isSynthetic !== 'boolean') throw new Error('Synthetic status must be explicit.')
 }
 
-// Trusted, server-only imports. A release is immutable; a corrected file needs a new version.
-export function importDataset(db: ReportsDatabase, input: DatasetImport) {
-  if (!input || !object(input.dataset) || !Array.isArray(input.records)) throw new Error('Invalid import document.')
-  const metadata = input.dataset
+function validateMetadata(metadata: DatasetImport['dataset']) {
   for (const field of ['name', 'version', 'url', 'license'] as const) {
     if (typeof metadata[field] !== 'string' || !metadata[field].trim()) throw new Error(`Dataset ${field} is required.`)
   }
   if (!/^[a-f0-9]{64}$/.test(metadata.fileSha256)) throw new Error('Original file SHA-256 is required.')
   if (!object(metadata.coverage)) throw new Error('Document dataset coverage, including unknown coverage.')
+}
+
+function validateImport(input: DatasetImport) {
+  if (!input || !object(input.dataset) || !Array.isArray(input.records)) throw new Error('Invalid import document.')
+  validateMetadata(input.dataset)
+}
+
+function validateRecord(record: DatasetImport['records'][number], index: number) {
+  if (!object(record) || !object(record.raw)) throw new Error(`Row ${index + 1} needs an original record object.`)
+  if (record.sourceRecordId !== undefined && (typeof record.sourceRecordId !== 'string' || !record.sourceRecordId.trim())) {
+    throw new Error('Source record identifier must be nonblank text.')
+  }
+}
+
+// Trusted, server-only imports. A release is immutable; a corrected file needs a new version.
+export function importDataset(db: ReportsDatabase, input: DatasetImport) {
+  validateImport(input)
+  const metadata = input.dataset
   return db.transaction((tx) => {
     const existing = tx.select().from(datasets)
       .where(and(eq(datasets.name, metadata.name), eq(datasets.version, metadata.version))).get()
     if (existing) throw new Error('Dataset release already exists; use a new version for corrections.')
     const datasetId = tx.insert(datasets).values({ ...metadata, importedAt: Date.now() }).returning().get().id
     for (const [index, record] of input.records.entries()) {
-      if (!object(record) || !object(record.raw)) throw new Error(`Row ${index + 1} needs an original record object.`)
-      if (record.sourceRecordId !== undefined && (typeof record.sourceRecordId !== 'string' || !record.sourceRecordId.trim())) {
-        throw new Error('Source record identifier must be nonblank text.')
-      }
+      validateRecord(record, index)
       const sourceRecordId = tx.insert(sourceRecords).values({
         datasetId, rowNumber: index + 1,
         recordKey: record.sourceRecordId === undefined ? `row:${index + 1}` : `id:${record.sourceRecordId}`,

@@ -81,6 +81,13 @@ describe('dataset imports', () => {
     { occurredStart: 10, occurredEnd: 9 },
     { occurredEnd: 10 },
     { occurredStart: 1.5 },
+    { occurredEnd: Infinity },
+    { publishedAt: '2024' },
+    { locationMethod: '' },
+    { locationPrecision: null },
+    { time: [] },
+    { qualityFlags: [1] },
+    { qualityFlags: null },
     { isSynthetic: undefined },
   ])('rejects invalid normalized data %j atomically', (invalid) => {
     const db = setup()
@@ -88,6 +95,32 @@ describe('dataset imports', () => {
     Object.assign(input.records[0].incident!, invalid)
     expect(() => importDataset(db, input)).toThrow()
     expect(db.select().from(datasets).all()).toHaveLength(0)
+  })
+
+})
+
+describe('dataset validation and export', () => {
+  it.each([
+    { name: '' }, { version: ' ' }, { url: null }, { license: 1 },
+    { fileSha256: 'invalid' }, { coverage: [] },
+  ])('rejects invalid dataset metadata %j without writing data', (invalid) => {
+    const db = setup()
+    const input = manifest()
+    Object.assign(input.dataset, invalid)
+    expect(() => importDataset(db, input)).toThrow()
+    expect(db.select().from(datasets).all()).toHaveLength(0)
+  })
+
+  it.each([
+    { raw: null }, { raw: [] }, { sourceRecordId: '' }, { sourceRecordId: 1 }, { incident: null },
+  ])('rolls back earlier rows when a later source record is invalid: %j', (invalid) => {
+    const db = setup()
+    const input = manifest()
+    input.records.push(Object.assign({ raw: {} }, invalid) as unknown as DatasetImport['records'][number])
+    expect(() => importDataset(db, input)).toThrow()
+    expect(db.select().from(datasets).all()).toHaveLength(0)
+    expect(db.select().from(sourceRecords).all()).toHaveLength(0)
+    expect(db.select().from(incidents).all()).toHaveLength(0)
   })
 
   it('exports beyond both the map limit and export batch size without losing source details', () => {

@@ -83,7 +83,7 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
     map.current.jumpTo({ center: [center.longitude, Math.max(-85, Math.min(85, center.latitude))] })
   }, [ready, center.latitude, center.longitude])
 
-  useSelectionMarker(map, ready, selected, onSelect, setError)
+  useSelectionMarker(map, { ready, selected, onSelect, onError: setError })
 
   return (
     <section className="map-panel" aria-label="Report map">
@@ -104,7 +104,9 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
   )
 }
 
-function useSelectionMarker(map: RefObject<Map | null>, ready: boolean, selected: Coordinates | null, onSelect: Props['onSelect'], onError: (error: string) => void) {
+type SelectionMarkerOptions = Pick<Props, 'selected' | 'onSelect'> & { ready: boolean; onError: (error: string) => void }
+
+function useSelectionMarker(map: RefObject<Map | null>, { ready, selected, onSelect, onError }: SelectionMarkerOptions) {
   const marker = useRef<Marker | null>(null)
   const select = useRef(onSelect)
   select.current = onSelect
