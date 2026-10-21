@@ -3,6 +3,8 @@ package com.ph.controller
 import com.ph.model.Incident
 import com.ph.request.IncidentForm
 import com.ph.service.ApiService
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -26,7 +28,16 @@ class IncidentController(private val apiService: ApiService) {
         return modelAndView
     }
 
-    @PostMapping(value = ["/save-incident"])
+    @PostMapping(value = ["/save-incident"], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun saveIncidentJson(@Valid @RequestBody incidentForm: IncidentForm): ResponseEntity<String> =
+            try {
+                apiService.saveIncident(incidentForm)
+                ResponseEntity.ok("Incident saved")
+            } catch (e: Exception) {
+                ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Incident could not be saved")
+            }
+
+    @PostMapping(value = ["/save-incident"], consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
     fun saveIncident(@Valid @ModelAttribute("incidentForm") incidentForm: IncidentForm,
                      modelAndView: ModelAndView): ModelAndView =
             try {

@@ -1,4 +1,63 @@
-<div layout:decorator="layout/mainLayout" layout:fragment="content">
-    <input type="text" class="form-control controls" placeholder="Search Address" id="searchBox"/>
-    <div id="map"></div>
-</div>
+<main layout:decorator="layout/mainLayout" layout:fragment="content" class="map-workspace"
+      th:attr="data-geocoder-url=${@environment.getProperty('map.geocoder-url', 'https://photon.komoot.io/api/')},data-tile-url=${@environment.getProperty('map.tile-url', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png')},data-hot-zones=${hotMap == true}">
+    <div id="map" role="region" aria-label="Incident map" tabindex="0"></div>
+    <aside class="map-panel" aria-label="Find a location and report an incident">
+        <div class="panel-intro">
+            <h1>What happened, and where?</h1>
+            <p>Find an address or click the map. Add the details and save your report.</p>
+        </div>
+        <form id="address-search" role="search">
+            <label for="address">Find an address</label>
+            <div class="search-row">
+                <input id="address" name="address" type="search" placeholder="Street, neighborhood, or city"
+                       minlength="3" maxlength="200" required autocomplete="off"/>
+                <button type="submit" id="search-button">Search</button>
+            </div>
+        </form>
+        <p id="search-status" class="status" role="status" aria-live="polite"></p>
+        <fieldset id="search-results" hidden>
+            <legend>Choose a location</legend>
+            <div id="address-results"></div>
+            <button type="button" id="select-address" disabled>Select</button>
+        </fieldset>
+        <div class="location-actions">
+            <button type="button" class="secondary" id="use-location">Use my location</button>
+            <button type="button" class="secondary" id="place-marker">Place marker at map center</button>
+        </div>
+        <p id="map-status" class="status" role="status" aria-live="polite">Showing Chihuahua. Click the map to place a marker.</p>
+        <p id="tile-status" class="status" role="status" aria-live="polite"></p>
+        <section id="incident-section" hidden aria-labelledby="incident-heading">
+            <div class="incident-heading">
+                <h2 id="incident-heading">Report an incident</h2>
+                <button type="button" class="text-button" id="cancel-incident">Cancel</button>
+            </div>
+            <p id="selected-location" class="coordinates"></p>
+            <form id="incident-report">
+                <label for="title">Title</label>
+                <input id="title" name="title" type="text" maxlength="120" placeholder="Briefly describe the incident" required/>
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" maxlength="2000" placeholder="Add the details you want to share" required></textarea>
+                <div class="form-columns">
+                    <div>
+                        <label for="incident">Incident type</label>
+                        <select id="incident" name="incident" required>
+                            <option value="" disabled selected>Choose a type</option>
+                            <option>Fight</option><option>Big Fight</option><option>Thievery</option>
+                            <option>Establishment Thievery</option><option>House Thievery</option>
+                            <option>Shooting</option><option>Murder</option><option>Drugs</option>
+                            <option>Police Arrest</option><option value="kidnapping">Kidnapping</option>
+                            <option>Rape</option><option>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="date">Date and time</label>
+                        <input id="date" name="date" type="datetime-local" required/>
+                    </div>
+                </div>
+                <button type="submit" id="save-incident" class="primary-action">Save incident</button>
+            </form>
+        </section>
+        <p id="save-status" class="status" role="status" aria-live="polite"></p>
+        <p class="provider-note">Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> · Address search by <a href="https://photon.komoot.io/" target="_blank" rel="noopener noreferrer">Photon</a></p>
+    </aside>
+</main>

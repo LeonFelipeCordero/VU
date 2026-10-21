@@ -1,9 +1,7 @@
 package com.ph.model
 
-import kotlinx.serialization.Serializable
 import java.util.*
 
-@Serializable
 data class Incident(var _id: String,
                     var location: CurrentLocation,
                     var title: String,

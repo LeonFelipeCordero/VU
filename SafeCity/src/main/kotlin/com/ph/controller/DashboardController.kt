@@ -1,22 +1,18 @@
 package com.ph.controller
 
 import com.ph.service.ApiService
-import com.ph.service.GoogleMapService
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
-class DashboardController(private val apiService: ApiService,
-                          private val googleMapService: GoogleMapService) {
+class DashboardController(private val apiService: ApiService) {
 
 
     @GetMapping(value = ["/dashboard"])
     fun dashboard(modelAndView: ModelAndView): ModelAndView {
-        modelAndView.addObject("apiKey", googleMapService.getApiKetForAutoComplete())
-        modelAndView.addObject("dashboard", true)
-        modelAndView.viewName = "layout/dashboard/dashboard"
+        modelAndView.viewName = "redirect:/"
         return modelAndView
     }
 

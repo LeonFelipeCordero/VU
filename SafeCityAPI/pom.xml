@@ -23,23 +23,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <kotlin.version>1.2.60</kotlin.version>
-        <serialization.version>0.6.1</serialization.version>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>bintray-kotlin-kotlinx</id>
-            <name>bintray</name>
-            <url>https://kotlin.bintray.com/kotlinx</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>bintray-kotlin-kotlinx</id>
-            <name>bintray-plugins</name>
-            <url>https://kotlin.bintray.com/kotlinx</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencies>
         <dependency>
@@ -94,11 +78,6 @@
             <artifactId>jackson-module-kotlin</artifactId>
             <version>2.9.4.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlinx</groupId>
-            <artifactId>kotlinx-serialization-runtime</artifactId>
-            <version>${serialization.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -144,18 +123,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <compilerPlugins>
-                        <plugin>kotlinx-serialization</plugin>
-                    </compilerPlugins>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlinx</groupId>
-                        <artifactId>kotlinx-maven-serialization-plugin</artifactId>
-                        <version>${serialization.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>

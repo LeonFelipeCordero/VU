@@ -15,16 +15,12 @@ class ApiService(private val basicAuthRestTemplate: BasicAuthRestTemplate,
                  private val propertiesConfiguration: PropertiesConfiguration){
 
     fun saveIncident(incidentForm: IncidentForm) =
-            basicAuthRestTemplate.postForObject("${propertiesConfiguration.host}/save-incident", incidentForm, Incident::class.java)
+            basicAuthRestTemplate.postForObject("${propertiesConfiguration.host}/save-incident", incidentForm, String::class.java)
 
 
     fun getNearIncidents(lat: Double, lng: Double): List<Incident> =
             basicAuthRestTemplate.getForEntity("${propertiesConfiguration.host}/incident/near?lat=$lat&lng=$lng",
                     IncidentsList::class.java).body
-
-
-    fun getApiKey(): String? =
-            basicAuthRestTemplate.getForObject("${propertiesConfiguration.host}/map-key", String::class.java)
 
 
     fun getStatistics(lat: Double, lng: Double): List<StatsOnTime> =

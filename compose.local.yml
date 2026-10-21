@@ -1,0 +1,41 @@
+services:
+  mongodb:
+    image: mongo:4.0
+    volumes:
+      - local-mongo:/data/db
+
+  api:
+    image: maven:3.8.8-eclipse-temurin-8
+    working_dir: /app
+    command: mvn -B spring-boot:run
+    environment:
+      SPRING_CLOUD_CONFIG_ENABLED: "false"
+      MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_DATABASE: safe_city
+      SERVER_PORT: "8081"
+    volumes:
+      - ./SafeCityAPI:/app
+      - api-maven:/root/.m2
+    depends_on:
+      - mongodb
+
+  app:
+    image: maven:3.8.8-eclipse-temurin-8
+    working_dir: /app
+    command: mvn -B spring-boot:run
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:8080"
+    environment:
+      SPRING_CLOUD_CONFIG_ENABLED: "false"
+      API_HOST: http://api:8081
+    volumes:
+      - ./SafeCity:/app
+      - app-maven:/root/.m2
+    depends_on:
+      - api
+
+volumes:
+  local-mongo:
+  api-maven:
+  app-maven:

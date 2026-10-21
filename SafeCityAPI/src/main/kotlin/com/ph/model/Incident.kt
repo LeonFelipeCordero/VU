@@ -1,6 +1,5 @@
 package com.ph.model
 
-import kotlinx.serialization.Serializable
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.index.CompoundIndex
@@ -11,7 +10,6 @@ import java.util.*
 /**
  * Created by leon on 11/30/2017.
  */
-@Serializable
 @Document(collection = "incident")
 @CompoundIndexes(CompoundIndex(name = "geolocation", def = "{'location': '2dsphere'}"))
 data class Incident(
