@@ -20,6 +20,35 @@ describe('location selection', () => {
     expect(select).toHaveBeenCalledExactlyOnceWith({ latitude: 28.64, longitude: -106.0738 })
   })
 
+  it('searches Photon without a key and selects the published Berlin coordinates', async () => {
+    vi.stubEnv('VITE_MAPTILER_KEY', '')
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => ({ features: [
+      { geometry: { type: 'Point', coordinates: [13.4132, 52.5219] }, properties: { osm_type: 'N', osm_id: 123, name: 'Alexanderplatz', city: 'Berlin' } },
+      { geometry: { type: 'Point', coordinates: [999, 999] }, properties: { name: 'Invalid result' } },
+    ] }) })))
+    const select = vi.fn()
+    render(<LocationSearch onSelect={select} />)
+    await userEvent.type(screen.getByLabelText('Search address'), 'Alexanderplatz Berlin')
+    await userEvent.click(screen.getByRole('button', { name: 'Search' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Alexanderplatz, Berlin' }))
+    expect(select).toHaveBeenCalledExactlyOnceWith({ latitude: 52.5219, longitude: 13.4132 })
+    expect(geocoding.forward).not.toHaveBeenCalled()
+  })
+
+  it('distinguishes different Photon points with the same address label', async () => {
+    vi.stubEnv('VITE_MAPTILER_KEY', '')
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => ({ features: [
+      { geometry: { type: 'Point', coordinates: [13.41831, 52.49899] }, properties: { name: 'Kottbusser Tor', city: 'Berlin' } },
+      { geometry: { type: 'Point', coordinates: [13.41801, 52.49930] }, properties: { name: 'Kottbusser Tor', city: 'Berlin' } },
+    ] }) })))
+    const select = vi.fn()
+    render(<LocationSearch onSelect={select} />)
+    await userEvent.type(screen.getByLabelText('Search address'), 'Kottbusser Tor Berlin')
+    await userEvent.click(screen.getByRole('button', { name: 'Search' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Kottbusser Tor, Berlin (52.49930, 13.41801)' }))
+    expect(select).toHaveBeenCalledExactlyOnceWith({ latitude: 52.49930, longitude: 13.41801 })
+  })
+
   it('shows a useful error when address search fails', async () => {
     vi.mocked(geocoding.forward).mockRejectedValue(new Error('Search unavailable'))
     render(<LocationSearch onSelect={vi.fn()} />)

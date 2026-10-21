@@ -3,6 +3,7 @@ import { useServerFn } from '@tanstack/react-start'
 import { useEffect, useRef, useState } from 'react'
 import { LocationSearch } from '../features/map/LocationSearch'
 import { MapPanel } from '../features/map/MapPanel'
+import { HistoricalSummary } from '../features/map/HistoricalSummary'
 import { ReportForm } from '../features/reports/ReportForm'
 import { ReportList } from '../features/reports/ReportList'
 import { getNearbyReports, submitReport } from '../features/reports/data'
@@ -48,7 +49,8 @@ function MapPage() {
           <ReportForm location={selected} enabled={data.status === 'ready'} onSubmit={(input) => saveReport({ data: input })} onSaved={() => { void router.invalidate() }} />
         </aside>
         <div className="map-and-reports">
-          <MapPanel center={center} selected={selected} reports={data.reports} onSelect={select} />
+          <MapPanel center={center} selected={selected} reports={data.reports} historical={data.historical?.incidents} onSelect={select} />
+          <HistoricalSummary incidents={data.historical?.incidents ?? []} limited={data.historical?.limited ?? false} />
           <ReportList reports={data.reports} limited={data.limited} available={data.status === 'ready'} />
         </div>
       </div>
