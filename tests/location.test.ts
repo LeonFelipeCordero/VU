@@ -4,9 +4,13 @@ import { reportFeatures } from '../src/features/map/report-layers'
 import type { LocationReport } from '../src/lib/report'
 
 describe('location URL state', () => {
+  it('starts in Berlin when the URL has no coordinates', () => {
+    expect(parseLocationSearch({})).toEqual({ lat: 52.52, lng: 13.405 })
+  })
+
   it('retains longitude and latitude without reversing them', () => {
     expect(parseLocationSearch({ lat: '52.52', lng: '13.405' })).toEqual({ lat: 52.52, lng: 13.405 })
-    expect(formatCoordinates(DEFAULT_LOCATION)).toBe('0.00000, 0.00000')
+    expect(formatCoordinates(DEFAULT_LOCATION)).toBe('52.52000, 13.40500')
   })
 
   it.each([NaN, Infinity, '', null, {}, [], 'not-a-number', 999])('uses the navigation default for invalid values: %s', (value) => {

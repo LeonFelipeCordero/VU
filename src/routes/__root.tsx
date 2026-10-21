@@ -26,7 +26,7 @@ function RootDocument({ children }: { children: ReactNode }) {
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <header className="site-header">
-          <Link to="/" className="wordmark">Vigiles Urbani<span>Community reports</span></Link>
+          <Link to="/" className="wordmark">Vigiles Urbani</Link>
           <nav aria-label="Main navigation"><Link to="/" activeOptions={{ exact: true }}>Map</Link><Link to="/about">About</Link></nav>
         </header>
         {children}

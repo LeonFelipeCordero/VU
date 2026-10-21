@@ -1,7 +1,7 @@
 import type { Coordinates } from './report'
 
-// Show the world until device location or an explicit location is available.
-export const DEFAULT_LOCATION: Coordinates = { latitude: 0, longitude: 0 }
+// Start in Berlin, where the imported historical dataset has coverage.
+export const DEFAULT_LOCATION: Coordinates = { latitude: 52.52, longitude: 13.405 }
 
 function coordinate(value: unknown, min: number, max: number, fallback: number) {
   if (typeof value !== 'number' && typeof value !== 'string') return fallback

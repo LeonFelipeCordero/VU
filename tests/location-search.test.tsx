@@ -57,36 +57,16 @@ describe('location selection', () => {
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain('Address search failed'))
   })
 
-  it('handles denied geolocation without selecting a default point', async () => {
+  it('ignores a search response after the query changes', async () => {
+    let resolve!: (result: Awaited<ReturnType<typeof geocoding.forward>>) => void
+    vi.mocked(geocoding.forward).mockImplementation(() => new Promise((done) => { resolve = done }))
     const select = vi.fn()
-    vi.stubGlobal('navigator', { ...navigator, geolocation: { getCurrentPosition: (_success: unknown, error: (value: { code: number }) => void) => error({ code: 1 }) } })
-    render(<LocationSearch onSelect={select} autoLocate />)
-    expect(screen.getByRole('status').textContent).toContain('permission was denied')
+    render(<LocationSearch onSelect={select} />)
+    await userEvent.type(screen.getByLabelText('Search address'), 'Berlin')
+    await userEvent.click(screen.getByRole('button', { name: 'Search' }))
+    await userEvent.type(screen.getByLabelText('Search address'), ' Mitte')
+    await act(async () => resolve({ features: [{ id: 'old', center: [13.405, 52.52], place_name: 'Old result' }] } as Awaited<ReturnType<typeof geocoding.forward>>))
+    expect(screen.queryByRole('button', { name: 'Old result' })).toBeNull()
     expect(select).not.toHaveBeenCalled()
-  })
-
-  it('does not let a late device result replace manually selected coordinates', async () => {
-    let resolve!: PositionCallback
-    vi.stubGlobal('navigator', { ...navigator, geolocation: { getCurrentPosition: (success: PositionCallback) => { resolve = success } } })
-    const select = vi.fn()
-    render(<LocationSearch onSelect={select} />)
-    await userEvent.click(screen.getByRole('button', { name: 'Use my location' }))
-    await userEvent.click(screen.getByText('Enter coordinates'))
-    await userEvent.type(screen.getByLabelText('Latitude'), '52.52')
-    await userEvent.type(screen.getByLabelText('Longitude'), '13.405')
-    await userEvent.click(screen.getByRole('button', { name: 'Select coordinates' }))
-    act(() => resolve({ coords: { latitude: 10, longitude: 20 } } as GeolocationPosition))
-    expect(select).toHaveBeenCalledExactlyOnceWith({ latitude: 52.52, longitude: 13.405 })
-  })
-
-  it('offers a keyboard-accessible selection when maps are not configured', async () => {
-    vi.stubEnv('VITE_MAPTILER_KEY', '')
-    const select = vi.fn()
-    render(<LocationSearch onSelect={select} />)
-    await userEvent.click(screen.getByText('Enter coordinates'))
-    await userEvent.type(screen.getByLabelText('Latitude'), '52.52')
-    await userEvent.type(screen.getByLabelText('Longitude'), '13.405')
-    await userEvent.click(screen.getByRole('button', { name: 'Select coordinates' }))
-    expect(select).toHaveBeenCalledExactlyOnceWith({ latitude: 52.52, longitude: 13.405 })
   })
 })

@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import type { Coordinates } from '../../lib/report'
 import { MAX_DESCRIPTION_LENGTH, validateReport } from '../../lib/report'
-import { formatCoordinates } from '../../lib/location'
 
 interface Props {
   location: Coordinates | null
@@ -42,7 +41,6 @@ export function ReportForm({ location, enabled, onSubmit, onSaved }: Props) {
   return (
     <section aria-labelledby="report-heading" className="report-section">
       <h2 id="report-heading">Add a report</h2>
-      <p className="selected-location">{location ? formatCoordinates(location) : 'Select a point on the map, search, or enter coordinates.'}</p>
       <form onSubmit={submit}>
         <label htmlFor="description">What happened?</label>
         <textarea id="description" value={description} onChange={(event) => setDescription(event.target.value)} maxLength={MAX_DESCRIPTION_LENGTH} rows={4} required disabled={pending} aria-describedby="report-help" />

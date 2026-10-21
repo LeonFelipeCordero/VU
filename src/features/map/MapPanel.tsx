@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import type { GeoJSONSource, Map, Marker } from 'maplibre-gl'
 import type { Coordinates, LocationReport } from '../../lib/report'
-import { formatCoordinates } from '../../lib/location'
 import { addReportLayers, expandCluster, reportFeatures } from './report-layers'
 import { addHistoricalLayer, historicalFeatures } from './historical-layers'
 import type { HistoricalIncident } from '../../lib/historical-incident'
@@ -40,7 +39,7 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
       })
       map.current = instance
       instance.addControl(new lib.NavigationControl(), 'top-right')
-      instance.on('error', () => setError('Map tiles could not load. Search or enter coordinates instead.'))
+      instance.on('error', () => setError('Map tiles could not load. Search for a location instead.'))
       instance.on('load', () => {
         if (!instance || disposed) return
         addHistoricalLayer(instance, latest.current.historical)
@@ -59,10 +58,10 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
           const position = event.lngLat.wrap()
           latest.current.onSelect({ latitude: position.lat, longitude: position.lng })
         } catch {
-          setError('The map could not select that point. Enter coordinates instead.')
+          setError('The map could not select that point. Search for a location instead.')
         }
       })
-    }).catch(() => setError('The map could not start. Search or enter coordinates instead.'))
+    }).catch(() => setError('The map could not start. Search for a location instead.'))
     return () => {
       disposed = true
       instance?.remove()
@@ -87,10 +86,6 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
 
   return (
     <section className="map-panel" aria-label="Report map">
-      <div className="map-toolbar">
-        <div><strong>Explore the area</strong><p>Reports within 1 km of {formatCoordinates(center)}</p></div>
-        <span className="map-legend">● Reports <span className="historical-legend">● Historical collisions</span><span>● Selected point</span></span>
-      </div>
       <div className="map-canvas" ref={container} aria-label="Interactive map" />
       {!ready && !error && <p className="map-notice" role="status">Loading map…</p>}
       {error && <p className="map-notice" role="alert">{error}</p>}
@@ -123,7 +118,7 @@ function useSelectionMarker(map: RefObject<Map | null>, { ready, selected, onSel
         select.current({ latitude: position.lat, longitude: position.lng })
       })
       marker.current = pin
-    }).catch(() => onError('The selection pin could not load. Enter coordinates instead.'))
+    }).catch(() => onError('The selection pin could not load. Search for a location instead.'))
     return () => { disposed = true; marker.current?.remove(); marker.current = null }
   }, [map, ready, selected?.latitude, selected?.longitude, onError])
 }

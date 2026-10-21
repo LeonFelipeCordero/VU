@@ -3,7 +3,6 @@ import { useServerFn } from '@tanstack/react-start'
 import { useEffect, useRef, useState } from 'react'
 import { LocationSearch } from '../features/map/LocationSearch'
 import { MapPanel } from '../features/map/MapPanel'
-import { HistoricalSummary } from '../features/map/HistoricalSummary'
 import { ReportForm } from '../features/reports/ReportForm'
 import { getNearbyReports, submitReport } from '../features/reports/data'
 import { parseLocationSearch } from '../lib/location'
@@ -23,37 +22,31 @@ function MapPage() {
   const router = useRouter()
   const saveReport = useServerFn(submitReport)
   const [selection, setSelection] = useState<Coordinates | null>(null)
-  const selectionRevision = useRef(0)
   const previousCenter = useRef({ lat, lng })
-  const autoLocate = useRef(!new URLSearchParams(router.state.location.searchStr).has('lat') && !new URLSearchParams(router.state.location.searchStr).has('lng'))
   const center = { latitude: lat, longitude: lng }
   const selected = selection?.latitude === lat && selection.longitude === lng ? selection : null
 
   useEffect(() => {
     if (previousCenter.current.lat === lat && previousCenter.current.lng === lng) return
-    selectionRevision.current++
     previousCenter.current = { lat, lng }
     setSelection((current) => current?.latitude === lat && current.longitude === lng ? current : null)
   }, [lat, lng])
 
   function select(location: Coordinates) {
-    selectionRevision.current++
     setSelection(location)
     void navigate({ search: { lat: location.latitude, lng: location.longitude }, replace: true })
   }
 
   return (
     <main id="main" className="map-page">
-      <div className="page-intro"><h1>See a place. Share what happened.</h1><p>Community reports are unverified.<br />For emergencies, contact local emergency services.</p></div>
       {data.status === 'unavailable' && <p className="connection-notice" role="alert">Reports could not load. Your selected location and draft are still here. <button className="text-button" onClick={() => void router.invalidate()}>Retry connection</button></p>}
       <div className="workspace">
         <aside className="selection-panel" aria-label="Location and report form">
-          <LocationSearch onSelect={select} selectionRevision={selectionRevision} autoLocate={autoLocate.current} />
+          <LocationSearch onSelect={select} />
           <ReportForm location={selected} enabled={data.status === 'ready'} onSubmit={(input) => saveReport({ data: input })} onSaved={() => { void router.invalidate() }} />
         </aside>
         <div className="map-and-reports">
           <MapPanel center={center} selected={selected} reports={data.reports} historical={data.historical?.incidents} onSelect={select} />
-          <HistoricalSummary incidents={data.historical?.incidents ?? []} limited={data.historical?.limited ?? false} />
         </div>
       </div>
     </main>
