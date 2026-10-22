@@ -36,9 +36,9 @@ nav a[aria-current='page'] { color: var(--accent); text-decoration: underline; }
 .map-page { min-height: calc(100dvh - 64px); display: flex; flex-direction: column; }
 .workspace { flex: 1; display: grid; grid-template-columns: 300px minmax(0, 1fr); background: var(--surface); }
 .selection-panel { padding: 1rem; border-right: 1px solid var(--line); min-width: 0; }
-.input-action { display: flex; gap: 0.5rem; }
-.input-action button { font-size: 0.8rem; padding-inline: 0.6rem; }
-.address-search { margin-bottom: 1rem; }
+.address-search { position: relative; margin-bottom: 1rem; }
+.address-dropdown { position: absolute; top: 100%; left: 0; right: 0; z-index: 5; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 8px 20px oklch(28% 0.012 83 / 0.12); }
+.address-dropdown > p { padding: 0.75rem; margin: 0; }
 .hint, time { color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
 .hint { margin: 0.6rem 0 1rem; }
 .report-section { border-top: 1px solid var(--line); padding-top: 1.5rem; margin-top: 1.5rem; }
@@ -46,8 +46,9 @@ nav a[aria-current='page'] { color: var(--accent); text-decoration: underline; }
 [role='status']:empty { display: none; }
 [role='status'], [role='alert'] { font-size: 0.85rem; overflow-wrap: anywhere; }
 [role='alert'] { color: oklch(42% 0.12 28); }
-.search-results { list-style: none; padding: 0; max-height: 250px; overflow: auto; }
-.search-results button { background: transparent; color: inherit; border-color: var(--line); width: 100%; text-align: left; font-size: 0.85rem; font-weight: 450; margin-bottom: 0.3rem; }
+.search-results { list-style: none; padding: 0; margin: 0; max-height: 250px; overflow: auto; }
+.search-results [role='option'] { padding: 0.75rem; min-height: 44px; cursor: pointer; font-size: 0.85rem; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.search-results [role='option']:hover, .search-results [aria-selected='true'] { background: oklch(94% 0.025 162); }
 .map-and-reports { min-width: 0; display: flex; flex-direction: column; }
 .map-panel { position: relative; flex: 1; display: flex; flex-direction: column; background: oklch(94% 0.015 83); }
 .map-canvas { flex: 1; min-height: 520px; width: 100%; }
