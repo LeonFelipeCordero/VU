@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
+import { validateViewport, type ViewportRequest } from '../../lib/map-viewport'
 import { validateCoordinates, validateReport, type Coordinates, type ReportInput } from '../../lib/report'
 
 export const getNearbyReports = createServerFn({ method: 'GET' })
@@ -13,6 +14,14 @@ export const getNearbyReports = createServerFn({ method: 'GET' })
       console.error('Failed to load reports.', error)
       return { status: 'unavailable' as const, reports: [], limited: false, historical: { incidents: [], limited: false } }
     }
+  })
+
+export const getViewportPoints = createServerFn({ method: 'GET' })
+  .validator((input: ViewportRequest) => validateViewport(input))
+  .handler(async ({ data }) => {
+    const { viewportPoints } = await import('../../db/viewport.server')
+    const { getDatabase } = await import('../../db/database.server')
+    return viewportPoints(getDatabase(), data)
   })
 
 export const submitReport = createServerFn({ method: 'POST' })

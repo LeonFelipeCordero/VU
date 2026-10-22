@@ -12,7 +12,7 @@ export function distanceMeters(latitude: number, longitude: number, otherLatitud
   return 2 * EARTH_RADIUS_METERS * Math.asin(Math.sqrt(Math.max(0, Math.min(1, a))))
 }
 
-function boundingBoxes({ latitude, longitude }: Coordinates) {
+export function boundingBoxes({ latitude, longitude }: Coordinates) {
   const angularRadius = NEARBY_RADIUS_METERS / EARTH_RADIUS_METERS
   const latitudeDelta = angularRadius / radians
   const south = Math.max(-90, latitude - latitudeDelta - 1e-10)
