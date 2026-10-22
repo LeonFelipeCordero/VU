@@ -4,6 +4,7 @@ import type { Coordinates, LocationReport } from '../../lib/report'
 import { addReportLayers, expandCluster, reportFeatures } from './report-layers'
 import { addHistoricalLayer, historicalFeatures } from './historical-layers'
 import type { HistoricalIncident } from '../../lib/historical-incident'
+import { useViewportPoints } from './use-viewport-points'
 import { openStreetMapStyle } from './map-style'
 import mapWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 
@@ -15,7 +16,9 @@ interface Props {
   onSelect: (location: Coordinates) => void
 }
 
-export function MapPanel({ center, selected, reports, historical = [], onSelect }: Props) {
+const emptyHistorical: HistoricalIncident[] = []
+
+export function MapPanel({ center, selected, reports, historical = emptyHistorical, onSelect }: Props) {
   const container = useRef<HTMLDivElement>(null)
   const map = useRef<Map | null>(null)
   const latest = useRef({ center, reports, historical, onSelect })
@@ -23,6 +26,7 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
   const [ready, setReady] = useState(false)
   const [error, setError] = useState('')
   const key = import.meta.env.VITE_MAPTILER_KEY
+  const points = useViewportPoints(map, ready, reports, historical)
 
   useEffect(() => {
     if (!container.current) return
@@ -72,10 +76,10 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
   useEffect(() => {
     if (!ready || !map.current) return
     const source = map.current.getSource('reports') as GeoJSONSource | undefined
-    source?.setData(reportFeatures(reports))
+    source?.setData(reportFeatures(points.reports))
     const historicalSource = map.current.getSource('historical-incidents') as GeoJSONSource | undefined
-    historicalSource?.setData(historicalFeatures(historical))
-  }, [ready, reports, historical])
+    historicalSource?.setData(historicalFeatures(points.historical))
+  }, [ready, points.reports, points.historical])
 
   useEffect(() => {
     if (!ready || !map.current) return
@@ -88,6 +92,7 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
     <section className="map-panel" aria-label="Report map">
       <div className="map-canvas" ref={container} aria-label="Interactive map" />
       {!ready && !error && <p className="map-notice" role="status">Loading map…</p>}
+      {ready && <PointStatus status={points.status} retry={points.retry} />}
       {error && <p className="map-notice" role="alert">{error}</p>}
       {Math.abs(center.latitude) > 85 && <p className="map-notice">This point is outside the map projection. The coordinates and report search are unchanged.</p>}
       {ready && <button className="map-center-button secondary" onClick={() => {
@@ -96,6 +101,13 @@ export function MapPanel({ center, selected, reports, historical = [], onSelect 
       }}>Select map center</button>}
     </section>
   )
+}
+
+function PointStatus({ status, retry }: Pick<ReturnType<typeof useViewportPoints>, 'status' | 'retry'>) {
+  if (status === 'loading') return <p className="map-notice" role="status">Loading points…</p>
+  if (status === 'limited') return <p className="map-notice" role="status">Showing a limited set of points. Zoom in to load this area in detail.</p>
+  if (status === 'error') return <p className="map-notice" role="alert">Points could not load. <button onClick={retry}>Retry</button></p>
+  return null
 }
 
 type SelectionMarkerOptions = Pick<Props, 'selected' | 'onSelect'> & { ready: boolean; onError: (error: string) => void }
